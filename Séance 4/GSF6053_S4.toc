@@ -1,0 +1,9 @@
+\beamer@sectionintoc {1}{Analyse de Variance}{4}{0}{1}
+\beamer@sectionintoc {2}{Coefficient de détermination $(R^2)$}{12}{0}{2}
+\beamer@sectionintoc {3}{Coefficient de détermination ajusté $(R^2$ ajusté)}{14}{0}{3}
+\beamer@sectionintoc {4}{Test d'hypothèse}{21}{0}{4}
+\beamer@sectionintoc {5}{Les contraintes linéaires}{33}{0}{5}
+\beamer@sectionintoc {6}{Test de Wald}{46}{0}{6}
+\beamer@sectionintoc {7}{Ratio de vraisemblance (LR)}{49}{0}{7}
+\beamer@sectionintoc {8}{Multiplicateur de Lagrange}{54}{0}{8}
+\beamer@sectionintoc {9}{Lien entre les Statistiques F, WALD, LR et LM}{58}{0}{9}

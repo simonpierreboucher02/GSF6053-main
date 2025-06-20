@@ -1,0 +1,632 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usetheme{default}
+\usecolortheme{default}
+
+\title[S02 Régression et MCO]{Section 05 : Les séries chronologiques\\ (Séance 10)}
+\subtitle{GSF-6053: Économétrie Financière}
+\author[SP. Boucher]{Simon-Pierre Boucher\inst{1}}
+\institute[Université Laval]
+{
+  \inst{1}%
+  Département de finance, assurance et immobilier\\
+  Faculté des sciences de l'administration\\
+  Université Laval}
+\date[Hiver 2022]{29 Mars 2022}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}{Références}
+\textbf{Obligatoires:}
+\begin{itemize}
+\item \textbf{Notes de cours:} Section 5 (Professeure: Marie-Hélène Gagnon)
+\item \textbf{Woolridge:} chapitres 11, 12 et 19.
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Complémentaires:}
+\begin{itemize}
+\item \textbf{Gujarati et Porter:} chapitres 21 et 22
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Plan de la séance}
+  \tableofcontents
+\end{frame}
+
+\section{Série chronologique}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Série chronologique}
+\begin{itemize}
+\item \textbf{Définition:} Une \textbf{série chronologique} (ou série temporelle) est toute suite d’observations indexées par un ensemble ordonné $T$ (un intervalle de temps).
+\begin{align*}
+(X_t : t \in T)
+\end{align*}
+\item Les séries chronologiques sont intéressantes, car plusieurs données économiques et financières ne sont pas indépendantes dans le temps.
+\item En effet, il est facile de constater qu’un graphique du prix d’un actif ou du PIB comporte une certaine tendance ou encore une dépendance d’une observation par rapport à la précédente. 
+\item Un objectif de l’analyse en série chronologique est de modéliser cette dépendance dans le temps.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Définitions des séries}
+\begin{block}{Séries continues}
+\begin{itemize}
+\item L’indice t peut prendre toutes les valeurs dans un intervalle de nombres réels. 
+\item Rare dans les données économiques ou financières généralement disponibles puisque les relevés se font de façon discrète. 
+\item \textbf{Exemples:} Séries de très haute fréquence, relevé de toutes les transactions sur un titre en temps continues
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Définitions des séries}
+\begin{block}{Séries discrètes}
+\begin{itemize}
+\item L’indice t ne prend que des valeurs isolées dans T. 
+\item L’ensemble des indices t est un sous-ensemble des nombres entiers. 
+\item La durée qui sépare deux observations consécutives d’une série discrète est souvent la même et représente la fréquence des observations (mensuel, annuel, journalière, etc.).
+\item Parmi les séries discrètes, on distingue :
+\begin{itemize}
+\item Les séries en niveau : Observations enregistrées instantanément, telle une photographie. En finance, ce sont les prix.
+\item Les séries en flux : Valeurs cumulées sur un intervalle de temps reflétant de l’histoire d’un phénomène sur cette période de temps. En finance, on parle souvent de rendement.
+\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Définitions des séries}
+\begin{itemize}
+\item Afin de lisser les séries chronologiques et d’éliminer les effets des unités de mesure, on utilise souvent une transformation logarithmique. 
+\item Une série soumise à cette transformation est souvent plus stable en première différence (flux). 
+\item \textcolor{red}{Attention, certaines séries ne doivent pas être prises en log et cette transformation ne règle pas les effets des observations extrêmes.} 
+\end{itemize}
+\end{frame}
+
+\section{Première différence}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Première différence}
+\textbf{La différence première définie par}
+\begin{align*}
+\Delta ln⁡(X_t) = ln(X_t) - ln(X_(t-1)
+\end{align*}
+\begin{itemize}
+\item Elle donne souvent une série plus stable et surtout souvent stationnaire.
+\item Notez que $\Delta ln⁡(X_t)$ est une approximation de la série des taux de croissance de $X_t$:
+\begin{align*}
+\Delta ln(X_t)=ln(X_t)-ln(X_{t-1}) \approx \frac{X_t-X_{t-1}}{X_{t-1}}
+\end{align*}
+\item En finance, les taux de croissance sont des rendements.
+\end{itemize}
+\end{frame}
+
+\section{Saisonnalité et Désaisonalisation}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Saisonnalité et Désaisonalisation}
+\begin{itemize}
+\item Certaines séries chronologiques présentent des comportements particuliers qui se reproduisent à des intervalles de temps réguliers : même mois, même trimestre, même période de l’année ou le même jour de la semaine. 
+\begin{itemize}
+\item On dit que ce sont des évènements saisonniers.
+\end{itemize}
+\item Il faut enlever ces \textbf{effets saisonniers} avant de modéliser la série : \textbf{désaisonnalisation}.
+\item Pour désaisonnaliser une série :
+\begin{itemize}
+\item Identifier les dates correspondant aux différents comportements saisonniers.
+\item Construire des variables dummies pour ces dates.
+\item Estimer un modèle comportant ces variables dummies.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\section{Processus stochastique}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Processus stochastique}
+\begin{itemize}
+\item Soit $T$ un ensemble non vide. 
+\item Un processus aléatoire sur $T$ est un ensemble de variables aléatoires réelles $X_t$ telles qu’à chaque élément $t \in T$ est associé une variable aléatoire $X_t$.
+\item Notation: $\left\{ X_t: t \in T \right\}$
+\item $T$ peut être continu ou discret, fini ou infini, mais en général, on suppose qu’il est infini.
+\item Un processus stochastique est un ensemble d’observation de variables aléatoires ordonné en $T$.
+\item Chacune des observations du processus stochastique est une variable aléatoire.
+\item Nous utiliserons donc des réalisations de ce processus stochastique pour faire de l’inférence sur cedit processus et l’expliciter.
+\end{itemize}
+\end{frame}
+
+\section{Processus déterministe}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Processus déterministe}
+\begin{itemize}
+\item Soit $\left\{ X_t : t \in T \right\}$ un processus stochastique 
+\begin{itemize}
+\item $T_1 \subseteq T$,  $I_t = \left\{X_s : s \leq t\right\}$
+\end{itemize}
+\item On dit que $\left\{X_t : t \in T \right\}$ est un processus déterministe dans $T_1$ si et seulement si:
+\begin{itemize}
+\item Il existe un ensemble de fonctions $\left\{g_t(I_{t-1}) : t \in T_1 \right\}$
+\item Telles que $X_t = g_t(I_{t-1})$ avec probabilité 1, $\forall t \in T_1$.
+\end{itemize}
+\item Un processus déterministe peut être parfaitement prévu à partir de son propre passé aux points où le processus est déterministe $(t \in T_1)$. 
+\item Il n’y a pas d’aléa associé à ce processus.
+\end{itemize}
+\end{frame}
+
+\section{Les séries stationnaires}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Les séries stationnaires}
+\begin{itemize}
+\item Le processus $\left\{X_t : t \in T \right\}$ est stationnaire au second ordre (faiblement stationnaire, ou stationnaire au sens large) si les trois conditions suivantes sont vérifiées:
+\begin{enumerate}
+\item $\forall t \in T, E(X_t^2)< \infty$
+\begin{itemize}
+\item Assure que les moments d’ordre deux existent, car un processus stationnaire au sens large doit avoir une variance finie.
+\end{itemize}
+\item $\forall t \in T, E(X_t)=\mu$ et indépendant de t
+\begin{itemize}
+\item L’espérance des variables aléatoires  $X_t$ est la même quelques soit la période $t$. 
+\end{itemize}
+\item $\forall t,s \in T \times T, \forall h \geq 0, COV(X_s,X_{s+h})=\gamma(h)$ est indépendant de t.
+\begin{itemize}
+\item Assure que la variance est constante dans le temps.
+\end{itemize}
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\section{Les processus non stationnaires}
+\frame{\tableofcontents[current]}
+
+
+\begin{frame}{Les processus non stationnaires}
+\begin{itemize}
+\item Un processus non stationnaire est un processus qui n’est pas faiblement stationnaire; ou encore c’est un processus pour lequel au moins une des trois conditions qui caractérisent la stationnarité faible est violée.
+\item La marche aléatoire est un exemple important à la finance d’un processus non stationnaire.
+\begin{align*}
+X_t=\beta+X_{t-1}+\epsilon_t
+\end{align*}
+Sachant les propriétés suivantes valables $\forall t$
+\begin{itemize}
+\item $E(\epsilon_t)=0$
+\item $V(\epsilon_t)=\sigma_{\epsilon}^2$
+\item $E(\epsilon_t,\epsilon_s)=0$ 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Les processus non stationnaires}
+\begin{block}{Considérez la série en commençant à $t=0$}
+\begin{itemize}
+\item On peut exprimer $X_1$ en fonction de $X_0$ dans le cas de la marche aléatoire.
+\begin{align*}
+X_1= \beta+ X_0+\epsilon_{1}
+\end{align*}
+\item On peut également exprimer $X_2$ en fonction de $X_1$.
+\begin{align*}
+X_2= \beta+ X_1+\epsilon_{2}
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Les processus non stationnaires}
+\begin{block}{Considérez la série en commençant à $t=0$}
+\begin{itemize}
+\item On peut voir facilement que nous pouvons incorporer la première équation donnant la solution de $X_1$ dans la deuxième équation donnant la solution de $X_2$.
+\begin{align*}
+X_2 & = \beta+ X_1+\epsilon_{2} \\ 
+& = \beta+ [\beta+ X_0+\epsilon_{1}]+\epsilon_{2} \\
+& = \beta + \beta +X_0 + \epsilon_1 +\epsilon_2 \\
+& = 2 \beta + X_0 + \epsilon_1 +\epsilon_2 
+\end{align*}
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+\begin{frame}{Les processus non stationnaires}
+\begin{block}{Considérez la série en commençant à $t=0$}
+\begin{itemize}
+
+\item Supposons que nous continuons cette petite procédure, mais cette fois nous posons uniquement le processus $X_t$, dans lequel nous allons incorporer $X_{t-1}$ et ensuite $X_{t-2}$, jusqu'à arriver à $X_0$.
+\begin{align*}
+X_t & =\beta + X_{t-1}+\epsilon_t \\ 
+& = \beta + [\beta + X_{t-2}+\epsilon_{t-1} ] +\epsilon_t \\
+& = 2 \beta + X_{t-2} +\epsilon_{t-1} +\epsilon_t \\
+& = 2 \beta + [\beta + X_{t-3}+\epsilon_{t-2} ] +\epsilon_{t-1} +\epsilon_t \\
+& = 3 \beta + X_{t-3}+\epsilon_{t-2} + \epsilon_{t-1} + \epsilon_t \\
+& =  \vdots \hspace{1cm} \vdots \hspace{2cm} \vdots \\
+& = T \beta + X_0 + (\epsilon_0+ \epsilon_1 + \epsilon_2+\cdots +\epsilon_{t-3}+\epsilon_{t-2}+\epsilon_{t-1}+\epsilon_{t})
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Les processus non stationnaires}
+\begin{block}{Considérez la série en commençant à $t=0$}
+\begin{itemize}
+\item Étudions le terme d’erreur
+\begin{align*}
+v_t=\epsilon_1+\epsilon_2+\cdots+\epsilon_t
+\end{align*}
+
+\begin{align*}
+E(v_t) & =E(\epsilon_1)+E(\epsilon_2)+\cdots+E(\epsilon_t) \\ 
+& =0
+\end{align*}
+
+\begin{align*}
+V(v_t) & =V(\epsilon_1)+V(\epsilon_2)+\cdots+V(\epsilon_t)\\ 
+& =\sigma_{\epsilon}^2+\sigma_{\epsilon}^2+\cdots+\sigma_{\epsilon}^2\\
+& =T\sigma_{\epsilon}^2
+\end{align*}
+
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{{Les processus non stationnaires}}
+\begin{itemize}
+\item On voit clairement que la variance du processus $V(v_t)$ explose dans le temps étant donné le résultats:
+\begin{align*}
+V(v_t)=T\sigma_{\epsilon}^2
+\end{align*}
+\item Ce que l’on voit dans la variance de ce processus est que plus T sera grand alors plus la variance sera grande. Donc, plus le temps passe et plus nous aurons une variance élevée.
+\item Noter que la série est autorégressive, mais le coefficient de $X_{t-1}$ est égal à $1$. 
+\item On parle alors de racine unitaire, de marche aléatoire et d’une série intégrée d’ordre $1, I(1)$.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{{Les processus non stationnaires}}
+On considère à nouveau le processus non-stationnaires suivant:
+\begin{align*}
+X_t=\beta+X_{t-1}+\epsilon_t
+\end{align*}
+\begin{itemize}
+\item Si $\beta \neq 0$, ce processus est dit \textbf{marche aléatoire avec intercepte} (random walk with drift) 
+\item Lorsque $\beta = 0$, on parle simplement de \textbf{marche aléatoire}. C’est un processus intégré d’ordre 1 également.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{{Les processus non stationnaires}}
+\begin{block}{Racine unitaire et (intégré d’ordre p)}
+\begin{itemize}
+\item Lorsqu’un processus $\left\{Y_t, t \in T \right\}$ peut être représenté sous la forme d’une marche aléatoire avec ou sans tendance, On dit qu’il possède une racine unitaire ou qu’il est intégré d’ordre 1, et noté $Y_t \sim I(1)$.
+\item Si on doit différencier deux fois un processus $\left\{Y_t, t \in T \right\}$ avant d’obtenir un processus stationnaire, on dit que ce processus est intégré d’ordre 2 et on note $Y_t \sim I(2)$.
+\item Plus généralement, un processus $\left\{Y_t, t \in T \right\}$ est intégré d’ordre p s’il faut le différencier p successivement avant d’obtenir un processus stationnaire.
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\section{Régression fallacieuse}
+\frame{\tableofcontents[current]}
+
+
+\begin{frame}{Régression fallacieuse}
+Nous allons poser deux séries non stationnaires:
+\begin{align*}
+X_t=X_{t-1}+v_t
+\end{align*}
+\begin{align*}
+Y_t=Y_{t-1}+u_t
+\end{align*}
+\begin{itemize}
+\item Nous savons que ces deux séries possèdent une racine unitaire et sont donc non-stationnaire. 
+\item Le fait d’inclure dans une régression les variables $X_t$ et $Y_t$ engendrera certainement une régression fallacieuse.
+\item Sans ce préoccuper la stationnarité, nous serions tenté de conclure que X à un pouvoir explicatif sur Y alors que nous avons généré ceux-ci pour n’en avoir aucun.
+\begin{block}{Régression Fallacieuse}
+\begin{align*}
+Y_t = \beta_1 +\beta_2 X_t + \epsilon_t
+\end{align*}
+\end{block}
+\item
+
+\end{itemize}
+\end{frame}
+
+\section{Opérateur de retard}
+\frame{\tableofcontents[current]}
+
+
+\begin{frame}{Opérateur de retard}
+\begin{itemize}
+\item Pour toute série chronologique $\left\{Y_t, t = −\infty, ... + \infty \right\}$, l’opérateur retard, noté $L$, est un opérateur qui transforme toute observation en la valeur qui la précède :
+\begin{align*}
+L(Y_t )= Y_{t-1}, \hspace{0.2cm} \forall t
+\end{align*}
+\item L'utilisation du $L$ sans aucun autre indicatif implique que nous sommes en présence d'un retard, alors que l'utilisation de l'opérateur retard avec un indicatif 2, 3 et p représente respectivement 2, 3 et p retard.
+\begin{align*}
+L^{2}(Y_t)=L(L(Y_t))=L(Y_{t-1})=Y_{t-2}
+\end{align*}
+\begin{align*}
+L^{p}(Y_t)=Y_{t-p}, \hspace{0.2cm} p>1
+\end{align*}
+\item Il s’agit d’un opérateur qui représente une notation en série chronologique. Il a des propriétés comme les autres opérateurs.
+\end{itemize}
+\end{frame}
+
+\section{Introduction au modèle AR(1)}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Introduction au modèle AR(1)}
+\textbf{Soit le processus:}
+\begin{align*}
+X_t=\alpha X_{t-1}+\epsilon_t
+\end{align*}
+Où le terme d'erreur possède les propriétés suivantes:
+\begin{itemize}
+\item $E(\epsilon_t )=0$
+\item $V(\epsilon_t )=\sigma_{\epsilon}^2$ 
+\item $E(\epsilon_t,\epsilon_s)=0$
+\begin{itemize}
+\item La série est stationnaire
+\item $\mid \alpha \mid < 1$ 
+\end{itemize}  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introduction au modèle AR(1)}
+\textbf{Soit le processus:}
+\begin{align*}
+X_t=\alpha X_{t-1}+\epsilon_t
+\end{align*}
+On pose également, les propriétés suivantes pour notre variable $X_t$:
+\begin{itemize}
+\item $E(X_t )=0$                
+\item $V(X_t )= \sigma_X^2$
+\item $E(X_t,X_{t-j})=E(X_s,X_{s-j})$            
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Introduction au modèle AR(1)}
+\begin{itemize}
+\item Nous allons utiliser une méthode récursive afin de trouver la variance de notre série, soit $V(X_t)=\sigma_{X}^2$.
+\item On sait que la valeur au temps $t$ de notre processus est $X_t$.
+\item Dans le cas du AR(1), on cherche a expliquer les variations de $X_t$ en fonction  de la même variable mais avec un retard $X_{t-1}$ et des choc $\epsilon_t$.
+\item Écrivons la série des $X_t$ en fonction des chocs $\epsilon_t$ présents et passés par récurrence (Prochaine diapo)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introduction au modèle AR(1)}
+\begin{align*}
+X_t & = \alpha(X_{t-1} )+ \epsilon_t\\
+& = X_t= \alpha (\alpha X_{t-2}+\epsilon_{t-1})+ \epsilon_t \\
+& = \alpha^2 X_{t-2}+ \alpha \epsilon_{t-1}+ \epsilon_t \\
+& = \alpha^2 (\alpha X_{t-3}+\epsilon_{t-2})+\alpha \epsilon_{t-1}+\epsilon_t \\
+& = \alpha^3 X_{t-3}+\alpha^2 \epsilon_{t-2}+\alpha \epsilon_{t-1}+\epsilon_t \\
+& = \alpha^s X_{t-s}+\alpha^{s-1}\epsilon_{t-(s-1)}+\cdots+\alpha^2 \epsilon_{t-2}+\alpha \epsilon_{t-1}+\epsilon_t
+\end{align*}
+\end{frame}
+
+\begin{frame}{Introduction au modèle AR(1)}
+
+\begin{itemize}
+\item \textbf{Considérons les possibilités suivantes:}
+\begin{itemize}
+\item $X_0 = 0$. La valeur initiale du processus $X_t=0$.
+\item Le processus des $X_t$ a commencé au passé infini.
+\end{itemize}
+\item \textbf{Dans les deux cas, je recule assez dans le temps:}
+\begin{align*}
+\alpha^sX_{t-s}=0
+\end{align*}
+\begin{itemize}
+\item $X_{t-s}=0$, car $t-s=0$
+\item $\lim_{\infty}\alpha^s=0$
+\end{itemize}
+\item On peut écrire le processus $X_t$ uniquement avec les chocs $\epsilon$
+\begin{align*}
+X_t \approx \epsilon_t+\alpha \epsilon_{t-1}+\alpha^2\epsilon_{t-2}+\alpha^3\epsilon_{t-3}+\cdots
+\end{align*}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Introduction au modèle AR(1)}
+\begin{block}{Calculons la variance de $X_t$}
+\begin{align*}
+\sigma_X^2 & =V(\epsilon_t)+\alpha^2 V(\epsilon_{t-1})+\alpha^4V(\epsilon_{t-2})+\alpha^6V(\epsilon_{t-3})+\cdots\\
+& = \sigma_{\epsilon}^2+\alpha^2 \sigma_{\epsilon}^2+\alpha^4 \sigma_{\epsilon}^2+\alpha^6 \sigma_{\epsilon}^2+\cdots\\
+& =\sigma_{\epsilon}^2(1+\alpha^2+\alpha^4+\alpha^6+\cdots)\\
+&= \sigma_{\epsilon}^2 \left( \frac{1}{1-\alpha^2} \right)
+\end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{Introduction au modèle AR(1)}
+\begin{block}{Calculons $E(X_t X_{t-1})$}
+\begin{align*}
+X_t \approx \epsilon_t+\alpha \epsilon_{t-1}+\alpha^2 \epsilon_{t-2}+\alpha^3 \epsilon_{t-3}+\cdots
+\end{align*}
+\begin{align*}
+X_{t-1} \approx \epsilon_{t-1}+\alpha \epsilon_{t-2}+\alpha^2 \epsilon_{t-3}+\alpha^3 \epsilon_{t-4}+\cdots
+\end{align*}
+\begin{align*}
+E(X_t X_{t-1}) & =\alpha E(\epsilon_{t-1}^2)+\alpha^3E(\epsilon_{t-2}^2)+\alpha^5E(\epsilon_{t-3}^2)+\cdots \\ & = \alpha \sigma_{\epsilon}^2 +\alpha^3 \sigma_{\epsilon}^2 + \alpha^5 \sigma_{\epsilon}^2 \\ & = \alpha\sigma_{\epsilon}^2 (1+\alpha^2+\alpha^4+\cdots) \\ & = \alpha\sigma_{\epsilon}^2  \left( \frac{1}{1-\alpha^2} \right) \\ & = \alpha \sigma_X^2
+\end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{Introduction au modèle AR(1)}
+\textbf{On peut montrer de la même façon le cas plus général:}
+\begin{align*}
+E(X_t,X_{t-s})=\alpha^s\sigma_{\epsilon}^2  \left( \frac{1}{1-\alpha^2} \right)=\alpha^s \sigma_X^2
+\end{align*}
+\textbf{Nous avons calculé:}
+\begin{align*}
+E(X_{t-s}^2)=\left( \frac{\sigma_{\epsilon}^2}{1-\alpha^2} \right)=\sigma_X^2 \hspace{0.5cm} \forall \hspace{0.2cm} l'indice
+\end{align*}
+\begin{itemize}
+\item Maintenant que nous avons un exemple de processus stochastique en série chronologique en tête, revenons au concept général.
+\item Nous voulons maintenant définir et caractériser la dépendance et l’évolution dans le temps du processus stochastique. 
+\item Pour ce faire, nous définirons certains concepts pour un processus faiblement stationnaire $\left\{ X_t : t \in T \right\}$.
+\end{itemize}
+\end{frame}
+
+
+\section{La fonction d’autocovariance $\gamma$}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{La fonction d’autocovariance $\gamma$}
+\begin{align*}
+\gamma: \mathbb{R} \rightarrow \mathbb{R}
+\end{align*}
+\begin{align*}
+h \rightarrow \gamma (h)=Cov(X_t,X_{t+h}), \forall t \in T.
+\end{align*}
+\begin{itemize}
+\item La fonction d’autocovariance ne dépend que de h et non de t. les observations entre elles dépendent de l’écart qui les séparent et non de leur position dans la série chronologique. 
+\item L’autocovariance est donc la variance avec soit même à une même période où $h=0$. Lorsque $h \neq 0$, alors on parle d’autocovariance entre deux périodes. 
+\end{itemize}
+\end{frame}
+
+\section{La fonction d’autocorrélation $\rho$}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{La fonction d’autocorrélation $\rho$}
+\begin{align*}
+\gamma: \mathbb{R} \rightarrow \mathbb{R}
+\end{align*}
+\begin{align*}
+h \rightarrow \rho (h) = \frac{Cov(X_t,X_{t+h})}{[Var(X_t) \times Var(X_{t+h})]^{\frac{1}{2}}}=\frac{\gamma (h)}{\gamma (0)}, \forall t \in T
+\end{align*}
+\begin{itemize}
+\item La fonction d’autocorrélation représente donc la corrélation entre deux observations de la série chronologique. 
+\item Ces deux fonctions ne dépendent que de $h$ qui existe entre les deux dates auxquelles correspondent les variables aléatoires $X_t$  et $X_{t+h}$ étudiées. 
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{La fonction d’autocorrélation $\rho$}
+\begin{align*}
+\forall h, \gamma (h)= \gamma (-h) 
+\end{align*}
+\begin{align*}
+\rho (h)= \rho (-h)
+\end{align*}
+\begin{itemize}
+\item Il est clair dans ce cas que pour $h = 0$, la fonction d’autocorrélation est égale à 1. 
+\item La fonction d’autocorrélation possède une représentation graphique appelée un corrélogramme ou ACF (autocorrélation fonction). 
+\item En pratique, nous aurons seulement une réalisation du processus d’intérêt donc nous regarderons le corrélogramme de l’échantillon (SACF). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{La fonction d’autocorrélation partielle}
+\begin{itemize}
+\item Pour tout processus $\left\{ X_t : t \in T \right\}$, possiblement non stationnaire, on définit la fonction d’autocorrélation partielle (partial autocorrelation function, PACF).
+\item L’autocorrélation entre $X_t$ et $X_{t_h}$ prend en compte les corrélations indirectes éventuelles entre $X_t$ et $X_{t-1}$, $X_{t-1}$ et $X_{t-2}$, $\cdots$ , et entre $X_{t-h+1}$ et $X_{t-h}$.
+\item Par contre, l’autocorrélation partielle entre $X_t$ et $X_{t-h}$ élimine les effets de $X_t$ et $X_{t-1}$, $X_{t-1}$ et $X_{t-2}$,$\cdots$ , $X_{t-h+1}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Processus autorégressif d’ordre 1}
+\begin{align*}
+X_t = \alpha_0 +\alpha_1 X_{t-1}+\epsilon_t, \hspace{0.5cm} \epsilon_t \sim
+ i.i.d
+\end{align*}
+\begin{itemize}
+\item L’autocorrélation partielle de $X_{t}$ et $X_{t-2}$ est l’effet de $X_{t-2}$ sur $X_t$ lorsqu’on a déjà contrôlé l’effet de $X_{t-1}$
+\item En conséquence les autocorrélations partielles d’ordre supérieur ou égal à 2 sont nulles, même si $X_t$ et $X_{t-1}$ sont corrélés et que ce dernier est corrélé avec $X_{t-2}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Autocorrélations partielles}
+\textbf{On calcule les autocorrélations partielles d’un processus $\left\{ X_t : t \in T \right\}$ de la façon}
+
+\vspace{0.2cm}
+
+\textbf{1.} Centrer la série : calculer la moyenne $\mu$ de la série et obtenir la série centrée constituée des $X_t^*=X_t-\mu$.
+
+\vspace{0.2cm}
+
+\textbf{2.} Former l’équation autorégressive d’ordre 1:
+\begin{align*}
+X_t^*=\phi_{11} X_{t-1}^*+e_t
+\end{align*}
+$\phi_{11}$ est l’autocorrélation partielle entre $X_t$ et $X_{t-1}$.
+
+\vspace{0.2cm}
+
+\textbf{3.} Former l’équation autorégressive d’ordre 2:
+\begin{align*}
+X_t^*=\phi_{21} X_{t-1}^*+\phi_{22} X_{t-2}^*+e_t
+\end{align*}
+$\phi_{22}$ est l’autocorrélation partielle entre $X_t$ et $X_{t-2}$ ou encore la corrélation entre $X_t$ et $X_{t-2}$ lorsque l'effet de $X_{t-1}$ est éliminé.
+
+\end{frame}
+
+
+\begin{frame}{Autocorrélations partielles}
+\textbf{On calcule les autocorrélations partielles d’un processus $\left\{ X_t : t \in T \right\}$ de la façon}
+
+\vspace{0.2cm}
+
+\textbf{4.} Répéter successivement ce procédé pour calculer l’autocorrélation partielle entre $X_t$ et $X_{t-h}$, $h \geq 2$
+
+
+\begin{itemize}
+\item Avec cette méthode, on obtient les résultats de la fonction d’autocorrélation partielle du processus $\left\{ X_t : t \in T \right\}$. 
+\item Lorsqu’on utilise un échantillon de données pour faire les calculs, on obtient les autocorrélations partielles d’échantillon.
+\end{itemize}
+
+\end{frame}
+
+\section{Équations de Yule-Walker}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Équations de Yule-Walker}
+\begin{itemize}
+\item Pour un processus stationnaire, les équations de Yule-Walker permettent d’obtenir les autocorrélations partielles, $\phi_{hh}$, $h=1,2$, $\cdots$ à partir des autocorrélations $\rho(j)$, $j=1,2$, $\cdots,h.$
+\end{itemize}
+\begin{align*}
+\phi_{11}=\rho(1)
+\end{align*}
+\begin{align*}
+\phi_{22}=\frac{\rho(2)-\rho(1)^2}{1-\rho(1)^2}
+\end{align*}
+\begin{align*}
+\phi_{ss}=\frac{\rho(s)-\sum_{j=1}^{s-1}\phi_{s-1,j}\rho(s-j)}{1-\sum_{j=1}^{s-1}\phi_{s-1,j}\rho(j)}
+\end{align*}
+Où $\phi_{sj}=\phi_{s-1,j}-\phi_{ss} \phi_{s-1,s-j}, j=1,2,3,\cdots, s-1$
+\end{frame}
+
+
+\begin{frame}{Équations de Yule-Walker}
+\begin{itemize}
+\item Sachant que les trois définitions présentées ci-haut prennent des formes particulières propres à des processus d’intérêt, ces estimations seront très utiles pour déterminer le processus spécifique le plus probable suivi par un échantillon de données. 
+\item De plus, ils peuvent nous documenter intuitivement sur la stationnarité d’un processus. Comment?
+\item Intuitivement, nous savons que les bruits blancs sont stationnaires par construction. 
+\item Donc, si notre processus à des caractéristiques proches à un bruit blanc en terme d’autocorrélation et d’autocorrélation partielle, nous pourrons en déduire qu’il est probablement stationnaire. 
+\item Ce n’est pas un test formel toutefois et cela contient une part d’arbitraire . 
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Équations de Yule-Walker}
+\begin{itemize}
+\item Comment savoir si cette série est vraiment non stationnaire avec le visuel? Il faudra faire un test formel.  
+\item Il y a aussi la question de savoir combien de retard sur l’autocorrélation il convient de calculer pour diagnostiquer un processus.
+\item Une règle du pouce serait de calculer les autocorrélations pour environ un quart du nombre total d’observations. 
+\item L’approche la plus souvent adoptée dans ce cas sera de regarder les critères d’information d’Akaike et de Schwarz (définis plus bas).
+\item Il est aussi possible de faire des tests statistiques de significativité sur les autocorrélations.  
+\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}

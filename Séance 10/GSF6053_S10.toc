@@ -1,0 +1,13 @@
+\beamer@sectionintoc {1}{Série chronologique}{4}{0}{1}
+\beamer@sectionintoc {2}{Première différence}{9}{0}{2}
+\beamer@sectionintoc {3}{Saisonnalité et Désaisonalisation}{11}{0}{3}
+\beamer@sectionintoc {4}{Processus stochastique}{13}{0}{4}
+\beamer@sectionintoc {5}{Processus déterministe}{15}{0}{5}
+\beamer@sectionintoc {6}{Les séries stationnaires}{17}{0}{6}
+\beamer@sectionintoc {7}{Les processus non stationnaires}{19}{0}{7}
+\beamer@sectionintoc {8}{Régression fallacieuse}{28}{0}{8}
+\beamer@sectionintoc {9}{Opérateur de retard}{30}{0}{9}
+\beamer@sectionintoc {10}{Introduction au modèle AR(1)}{32}{0}{10}
+\beamer@sectionintoc {11}{La fonction d’autocovariance $\gamma $}{41}{0}{11}
+\beamer@sectionintoc {12}{La fonction d’autocorrélation $\rho $}{43}{0}{12}
+\beamer@sectionintoc {13}{Équations de Yule-Walker}{50}{0}{13}

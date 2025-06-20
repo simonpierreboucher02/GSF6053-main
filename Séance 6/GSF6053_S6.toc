@@ -1,0 +1,2 @@
+\beamer@sectionintoc {1}{Hétéroscédasticité}{4}{0}{1}
+\beamer@sectionintoc {2}{Tests diagnostiques d'hétéroscédasticité}{16}{0}{2}

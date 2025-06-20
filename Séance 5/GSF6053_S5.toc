@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Multicolinéarité}{4}{0}{1}
+\beamer@sectionintoc {2}{Problèmes de spécification}{10}{0}{2}
+\beamer@sectionintoc {3}{Erreurs non-sphériques}{20}{0}{3}
+\beamer@sectionintoc {4}{Les Moindres carrés généralisés}{27}{0}{4}

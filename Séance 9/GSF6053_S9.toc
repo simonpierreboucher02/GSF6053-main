@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Le modèle within group estimator}{4}{0}{1}
+\beamer@sectionintoc {2}{Le modèle panel avec effets aléatoires}{12}{0}{2}
+\beamer@sectionintoc {3}{Le modèle empilé}{21}{0}{3}
+\beamer@sectionintoc {4}{Transformation de Fuller-Battese}{27}{0}{4}

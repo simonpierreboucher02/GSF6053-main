@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Modèle de Régression}{4}{0}{1}
+\beamer@sectionintoc {2}{Moindres Carrés Ordinaires (En sommation)}{7}{0}{2}
+\beamer@sectionintoc {3}{Moindres Carrés Ordinaires (Format Matricielle)}{15}{0}{3}
+\beamer@sectionintoc {4}{Exemple Numérique}{26}{0}{4}

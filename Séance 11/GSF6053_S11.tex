@@ -1,0 +1,438 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usetheme{default}
+\usecolortheme{default}
+
+\title[S02 Régression et MCO]{Section 05 : Les séries chronologiques\\ (Séance 11)}
+\subtitle{GSF-6053: Économétrie Financière}
+\author[SP. Boucher]{Simon-Pierre Boucher\inst{1}}
+\institute[Université Laval]
+{
+  \inst{1}%
+  Département de finance, assurance et immobilier\\
+  Faculté des sciences de l'administration\\
+  Université Laval}
+\date[Hiver 2022]{5 avril 2022}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}{Références}
+\textbf{Obligatoires:}
+\begin{itemize}
+\item \textbf{Notes de cours:} Section 5 (Professeure: Marie-Hélène Gagnon)
+\item \textbf{Woolridge:} chapitres 11, 12 et 19.
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Complémentaires:}
+\begin{itemize}
+\item \textbf{Gujarati et Porter:} chapitres 21 et 22
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Plan de la séance}
+  \tableofcontents
+\end{frame}
+
+\section{Estimation des moments de processus stationnaire}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Estimation des moments de processus stationnaire}
+\begin{itemize}
+\item Si le processus est stationnaire, on sait que ces T variables aléatoires ont la même moyenne, la même variance, et que leur autocovariance ne dépend que du retard qui sépare les dates auxquelles elles correspondent. 
+\item On peut estimer ces paramètres du processus à partir de ces T observations
+\end{itemize}
+\textbf{Estimation de la moyenne:}
+\begin{align*}
+\hat{\mu}=\frac{1}{T}\sum_{t=1}^T X_t
+\end{align*}
+\textbf{L’autocovariance de délai h:}
+\begin{align*}
+\hat{\gamma}(h)=\frac{1}{T-h}\sum_{t=1}^{t-h}(X_t-\hat{\mu})(X_{t+h}-\hat{\mu})
+\end{align*}
+\end{frame}
+
+
+\begin{frame}{Estimation des moments de processus stationnaire}
+
+\textbf{Pour $h=0$, on aura un estimateur de la variance du processus :}
+\begin{align*}
+\hat{\gamma}(0)=\frac{1}{T}\sum_{t=1}^{T}(X_t-\hat{\mu})(X_t-\hat{\mu})
+\end{align*}
+\textbf{Le coefficient d’autocorrélation de retard h est estimé:}
+\begin{align*}
+\hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
+\end{align*}
+\end{frame}
+
+
+\section{Tests de bruits blancs}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Tests de bruits blancs}
+\begin{block}{Cas particulier: Le bruit blanc}
+\begin{itemize}
+\item Si le processus est un bruit blanc, les autocovariances et autocorrélations de délai $h > 0$ sont nulles. On peut alors montrer que
+\begin{align*}
+\hat{\rho}(h) \rightarrow N \left(0,\frac{1}{T}\right)
+\end{align*}
+\begin{align*}
+\frac{\hat{\rho}(h)}{\sqrt{\frac{1}{T}}} \rightarrow N(0,1) \hspace{1cm} \textbf{stat 1}
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Tests de bruits blancs}
+\begin{block}{Cas particulier: Le bruit blanc}
+\begin{itemize}
+\item Ou que 
+\begin{align*}
+\hat{\rho}(h) \rightarrow N \left(0,\frac{T-h}{T(T+2)}\right)
+\end{align*}
+\begin{align*}
+\frac{\hat{\rho}(h)}{\sqrt{\frac{T-h}{T(T+2)}}} \rightarrow N(0,1)  \hspace{1cm} \textbf{stat 2}
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Tests de bruits blancs}
+\begin{block}{Cas particulier: Le bruit blanc}
+\begin{itemize}
+\item On peut utiliser ces résultats distributionnels pour tester empiriquement la nullité de l’autocorrélation d’ordre h.
+\begin{align*}
+H_0: \rho (h) = 0 
+\end{align*}
+\begin{align*}
+H_A: \rho(h)\neq 0
+\end{align*}
+\item On rejette l’hypothèse nulle si la statistique choisie (1 ou 2) a une valeur plus élevée que le point critique d’une loi normale centrée réduite.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Tests Portmanteau}
+\begin{itemize}
+\item Une façon plus pratique de tester les autocorrélations est un test Portmanteau. 
+\item Un test Portmanteau teste conjointement la nullité des autocorrélations de délai $1, 2, 3,\cdots , J$. (on pense qu’après $J$ retard, le processus s’apparente à un bruit blanc avec des autocorrélations nulles)
+\end{itemize}
+\begin{align*}
+H_0: \rho(1) = \rho(2) = \cdots =\rho(h)=0
+\end{align*}
+\begin{align*}
+H_A: \exists h:	 \rho(h) \neq 0, h \in \left\{ 1,2,3,\cdots,J \right\} 
+\end{align*}
+
+\begin{itemize}
+\item Les deux tests présentés ci-bas permettent de détecter si le processus est autocorrélé  à un ordre $h \leq J$. 
+\item Si l’on pense qu’il ne peut y avoir d’autocorrélation d’ordre supérieur à $J$ et si le test d’ordre $J$ ne rejette pas, alors on peut dire que le processus est un bruit blanc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Box Pierce}
+\begin{itemize}
+\item On utilise la statistique 1 comme résultat distributionnel, on obtient la statistique de test conjoint suivant :
+\begin{align*}
+Q_1=\sum_{h=1}^J \left(\frac{\hat{\rho}(h)}{\sqrt{\frac{1}{T}}}\right)^2=T\sum_{h=1}^J(\hat{\rho}(h))^2
+\end{align*}
+\item Le test rejette pour de grandes valeurs de la statistique $Q1$. On rejette  $H_0$ si la statistique $Q1$ calculée est plus grande que le point critique donné par une table du chi-deux à $J$ degrés de liberté. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Ljung-Box}
+\begin{itemize}
+\item Le test de Ljung-Box utilise plutôt le résultat distributionnel associé à la statistique 2.
+\begin{align*}
+Q_2=\sum_{h=1}^J \left(\frac{\hat{\rho}(h)}{\sqrt{\frac{T-h}{T(T+2)}}}\right)^2=T\sum_{h=1}^J \frac{(\hat{\rho}(h))^2}{T-h}
+\end{align*}
+\item Ce test se compare aussi au point critique d’une khi-carré avec $J$ degrés de liberté
+\item En général, le Ljung-Box est plus utilisé, car on lui reconnait de meilleures propriétés en petit échantillon que le Box-Pierce.
+\end{itemize}
+\end{frame}
+
+
+\section{Tests de racine unitaire}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Tests de racine unitaire}
+\begin{itemize}
+\item Pour connaitre le degré d’intégration d’une variable, il faut se baser sur des procédures formelles de test statistique. 
+\item Les tests de racine unitaire sont considérés comme des tests de stationnarité. 
+\item Soit $\left\{ Y_t, t \in R \right\}$ un processus stochastique. Nous voulons savoir si ce processus possède une racine unitaire.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Dickey-Fuller augmenté}
+\begin{itemize}
+\item Hypothèse nulle $H_0$ : le processus $\left\{ Y_t, t \in R \right\}$ possède une racine unitaire.
+\item Dans sa forme la plus complète, le test est basé sur l’estimation du modèle suivant avec tendance déterministe et constante:
+\begin{align*}
+(1-L)Y_t=\alpha+\beta t + \delta Y_{t-1}+\sum_{t=1}^m \pi_i(1-L)Y_{t-i}+u_t
+\end{align*}
+\item En transformant $\Delta Y_t=Y_t-Y_{t-1}$
+\begin{align*}
+Y_t=\alpha+\beta t + \delta Y_{t-1}+\sum_{t=1}^m \pi_iY_{t-i}+u_t
+\end{align*}
+\item Où $u_t$  $\sim$ $i.i.d$ $N(0,\sigma^2)$ et $m$ est choisi selon le degré d’autocorrélation potentiel du processus $Y_t$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Dickey-Fuller augmenté}
+\textbf{Dans ce modèle, l’hypothèse nulle  s’écrit:}
+\begin{align*}
+H_0:\delta =0
+\end{align*}
+\textbf{Contre l’alternative unilatérale:}
+\begin{align*}
+H_A:\delta<0
+\end{align*}
+\begin{itemize}
+\item L’intuition du test. Prenez le test de Dickey Fuller non augmenté (pour un seul retard sans tendance ni constante), si l’hypothèse nulle n’est pas rejetée, cela implique que $\Delta Y_t= u_t$. 
+\item Comme le terme d’erreur est bruit blanc et stationnaire, on sait que s’il y a une racine unitaire dans $Y_t$, sa première différence elle est stationnaire.
+\item Sous l’hypothèse nulle, il est impossible d’utiliser un ratio de Student comparé à une distribution t à cause de la racine unitaire. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Dickey-Fuller augmenté} 
+\begin{itemize}
+\item Il faudra donc utiliser une table statistique propre au test et dérivée par Dickey et Fuller
+\item La région critique du test est obtenue en comparant le ratio t pour la variable $Y_{t-1}$ à une valeur critique obtenue à partir d’une distribution non standard qui est très sensible à la spécification de l’équation estimée.
+\end{itemize}
+\begin{align*}
+DK=\frac{(\hat{\rho}-1)}{SE(\hat{\rho})}
+\end{align*}
+\begin{itemize}
+\item la distribution t de Student ne peut pas être utilisée, car les valeurs critiques appropriées sont inférieures à celles de la distribution t. (pour un seuil de significativité de 5\%, elle est inférieure à la valeur 1.96 obtenue avec la distribution t). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Dickey-Fuller augmenté} 
+\begin{itemize}
+\item Il est important de noter que la spécification du test (avec ou sans constante ou avec ou sans tendance) va affecter les points critiques de la statistique. 
+\item Il faut donc utiliser les points critiques distincts pour ces trois spécifications. 
+\item Il n’y a pas de procédure ferme pour déterminer quel type de test de Dickey-Fuller il convient de faire. 
+\item Cependant, on peut utiliser les critères de sélections Aikaiké et Schwarz pour déterminer s’il convient d’ajouter des retards pour les erreurs. 
+\item On peut aussi faire un test F de significativité conjointe sur les coefficients de la constante et de la tendance afin de savoir s’ils sont pertinents. 
+\item Par contre, la valeur critique n’est pas comparée à une distribution F, mais plutôt à une table particulière dérivée par Dickey et Fuller.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Philips-Perron}
+\begin{itemize}
+\item Le test de Philipps-Perron tient aussi compte de la possible autocorrélation des erreurs, mais sans ajouter des lags des erreurs dans le modèle. 
+\item Tester $H_0: \rho =1$ contre l’alternative $H_A: \rho < 1$ dans le modèle:
+\begin{align*}
+Y_t=\alpha +\beta t +\rho Y_{t-1}+u_t
+\end{align*}
+\item Supposons un échantillon de taille $T$, soit $\hat{\rho}$ l'estimateur de $\rho$
+\item La statistique de test $Z_{\rho}$ est définie par:
+\begin{align*}
+Z_{\rho}=(\hat{\rho}-1)T-\frac{1}{2}\frac{T \sigma^2}{S_T^2}(\hat{\lambda}^2-\hat{\gamma}_0)
+\end{align*}
+Avec 
+\begin{align*}
+\lambda^2=\gamma_0+2\sum_{j=1}^{\infty} \gamma_j
+\end{align*}
+où $\gamma_j$ est l’autocovariance d’ordre $j$ du processus, $j = 0, 1, 2,\cdots$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de Philips-Perron}
+\begin{itemize}
+\item Pour les calculs dans un échantillon de taille T, on a:
+\begin{align*}
+\hat{\lambda}^2=\hat{\gamma}_0+2 \sum_{j=1}^{l} \left[1-\frac{j}{1+l} \right]\hat{\gamma}_j
+\end{align*}
+\begin{align*}
+\hat{\gamma}_j=\frac{1}{T}\sum_{t=j+1}^T\hat{u}_t \hat{u}_{t-j}, \hspace{0.5cm} j=0,1,\cdots,T
+\end{align*}
+\begin{align*}
+S_T^2=(T-K)\sum_{t=1}^T\hat{u}_t^2
+\end{align*}
+\item où K est le nombre de paramètres estimés du modèle de régression et et l le paramètre de troncature de la sommation infinie.
+\item l est choisi à partir de l’ordre à partir duquel les autocovariances sont suffisamment faibles pour être assimilées à zéro.
+\end{itemize}
+\end{frame}
+
+
+\section{Transformation d'une séries non stationnaire en série stationnaire}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{Transformation d'une séries non stationnaire en série stationnaire}
+\begin{itemize}
+\item On a vu que si une série n’est pas stationnaire, cela peut être causé par une tendance 
+\begin{align*}
+X_t=\delta+\beta t+\epsilon_t
+\end{align*}
+\item ou par une racine unitaire 
+\begin{align*}
+X_t=\beta+ X_{t-1}+\epsilon_t
+\end{align*}
+\item Lorsque l’on veut ramener une série chronologique non stationnaire à une série stationnaire, il existe deux possibilités.
+\item Si la série possède une racine unitaire, nous savons que par définition leur première différence sera stationnaire.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Transformation d'une séries non stationnaire en série stationnaire}
+\begin{itemize}
+\item Donc, la solution est de les différencier. Si la série a une tendance déterministe, la solution est d’utiliser le résidu ($\hat{u}_t$) de régression de la série chronologique sur une constante et une tendance:
+\begin{align*}
+\hat{u}=[\hat{Y}_t-\hat{\beta}_1+\hat{\beta}_2 t]
+\end{align*}
+\item Parfois, la tendance est non-linéaire et il faudra ajouter à la régression $t^2$. 
+\item Avant de choisir une des deux méthodes, il convient de bien diagnostiquer ce qui rend la série non stationnaire, puisqu’utiliser la mauvaise méthode pour stationnariser la série peut avoir des conséquences importantes. 
+\end{itemize}
+\end{frame}
+
+
+\section{La conintégration}
+\frame{\tableofcontents[current]}
+
+\begin{frame}{La conintégration}
+\begin{itemize}
+\item Lorsque les deux variables d’une régression ne sont pas stationnaires, la régression sera fallacieuse. 
+\item Il est aussi possible que ces variables (ou d’un système d’équations) partagent une même tendance: \textbf{c’est le concept de cointégration}.
+\item Des séries de données non stationnaires sont dites cointégrées s’il existe une combinaison linéaire de ces séries qui est stationnaire. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{La conintégration}
+\begin{block}{Démonstration dans le cas de deux variables cointégrées, $X_t$ et $Y_t$:}
+\textbf{Puisqu’elles sont intégrées d’ordre 1:}
+\begin{align*}
+X_t=\mu_{xt}+e_{xt}
+\end{align*}
+\begin{align*}
+Y_t=\mu_{yt}+e_{x=yt}
+\end{align*}
+\begin{itemize}
+\item Où $\mu_{xt}$ et $\mu_{yt}$ sont les composantes marche aléatoire associée à $X_t$ et $Y_t$ respectivement, et $e_{xt}$ et $e_{yt}$ sont leur composante stationnaire.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{La conintégration}
+\begin{itemize}
+\item Si $X_t$ et $Y_t$ sont cointégrés, il existe un vecteur de cointégration $(\beta_1, \beta_2)$ tel que $\beta_1X_t + \beta_2Y_t$ soit stationnaire.
+\begin{align*}
+\beta_1 X_t+\beta_2 Y_t & =\beta_1(\mu_{xt}+e_{xt})+\beta_2(\mu_{yt}+e_{x=yt})\\
+& = (\beta_1\mu_{xt}+\beta_2 \mu_{yt})+(\beta_1e_{xt}+\beta_2 e_{yt})
+\end{align*}
+\item Ainsi, on voit que puisque $(\beta_1e_{xt}+\beta_2 e_{yt})$ est stationnaire comme somme de deux processus stationnaires.
+\item Alors pour que $\beta_1 X_t+\beta_2 Y_t$ soit stationnaire, le terme $(\beta_1\mu_{xt}+\beta_2 \mu_{yt})$ doit être nul :
+\begin{align*}
+(\beta_1\mu_{xt}+\beta_2 \mu_{yt})=0
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{La conintégration}
+\begin{itemize}
+\item Mais $\beta_1 \neq 0$ et $\beta_2 \neq 0$, et on doit avoir:
+\begin{align*}
+\mu_{xt}=\frac{\beta_2}{\beta_1} \mu_{yt}
+\end{align*}
+\item Ainsi les deux tendances stochastiques (composantes contenant la racine unitaire) $\mu_{xt}$ et $\mu_{yt}$ sont identiques à une constante multiplicative près. Les deux processus cointégrés possèdent donc une tendance stochastique commune.
+\item Le concept peut être étendu à plusieurs variables k, auquel cas il y aurait k paramètres de cointégration. 
+\item Lorsque des variables sont cointégrées, toute déviation systématique de la relation d’équilibre de long terme a des répercussions sur l’évolution de court terme de chacune d’elles.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de cointégration}
+\begin{itemize}
+\item Supposons un échantillon pour deux séries $\left\{ X_t \right\}$ et $\left\{ Y_t \right\}$ qui seraient intégrées d’ordre 1. La procédure décrite ci-dessous s’applique aussi dans le cas d’un nombre quelconque de variables.
+\item Nous voulons déterminer s’il existe une relation d’équilibre de long terme entre ces variables, c’est-à-dire si ces variables sont cointégrées.
+\item La procédure à quatre étapes de Engle et Granger (1987) qui se base sur les tests de stationnarité.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Test de cointégration}
+\begin{block}{Étape 1:}
+Prétester les variables $\left\{ X_t \right\}$ et $\left\{ Y_t \right\}$ pour leur ordre d’intégration; utiliser pour cela le test de racine unitaire de Dickey-Fuller Augmenté.
+\begin{enumerate}
+\item Si les variables sont toutes stationnaires, alors on doit utiliser les méthodes usuelles des séries stationnaires pour les modéliser.
+\item Si les variables sont intégrées de différents ordres, alors on
+peut conclure qu’elles ne sont pas cointégrées. Dans notre contexte, les variables seront presque toujours $I(1)$.
+\item Si les variables sont intégrées de même ordre, passer à l’étape 2.
+\end{enumerate}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Test de cointégration}
+\begin{block}{Étape 2:}
+\begin{itemize}
+\item Si les deux variables sont I(1), il faut estimer la relation d’équilibre de long terme, sous la forme :
+\begin{align*}
+Y_t=\beta_0+\beta_1 X_t+e_t
+\end{align*}
+\item Pour déterminer si les variables sont cointégrées, considérons la série $\hat{e}_t$ des résidus de l’estimation de (1). 
+\item Si la série des résidus est stationnaire, alors $Y_t$ et $X_t$ sont cointégrées d’ordre $(1,1)$. 
+\item Pour tester la stationnarité des résidus, on peut utiliser un test de racine unitaire (une version adaptée du test de Dickey-Fuller augmenté). Soit la spécification suivante :
+\begin{align*}
+\Delta \hat{e}_t=\alpha_1 \hat{e}_{t-1}+\epsilon_t
+\end{align*}
+\item On doit tester l’hypothèse nulle $H_0: \alpha_1 = 0$. Si on ne rejette pas $H_0$, alors la série des résidus possède une racine unitaire, et les variables $Y_t$ et $X_t$ ne sont pas cointégrées. 
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Test de cointégration}
+\begin{block}{Étape 2:}
+\begin{itemize}
+\item Si par contre on rejette $H_0$, alors la série des résidus est stationnaire et les variables $Y_t$ et $X_t$ sont cointégrées d’ordre $(1,1)$.
+\item Les points critiques utilisés pour faire ce test ne sont pas exactement ceux du test de DFA habituel, car la série des résidus a été construite sous certaines contraintes, notamment celles qui visent à minimiser la somme des carrés résiduels, ce qui rend la variance de cette série la plus faible possible. 
+\item Pour tenir compte de ce fait, on a construit des points critiques modifiés du test de DFA qui sont appropriés à ce type de situation.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Test de cointégration}
+\begin{block}{Étape 2:}
+\begin{itemize}
+\item Si l’on constate que les résidus sont corrélés, alors on peut spécifier une version augmentée où l’on introduit des retards de la variable expliquée, ce qui peut résoudre ce problème d’autocorrélation :
+\begin{align*}
+\Delta \hat{e}_t=\alpha_1 \hat{e}_{t-1}+\sum_{j=1}^p b_j \Delta \hat{e}_{t-j}+\epsilon_t
+\end{align*}
+\item Le paramètre d’intérêt est toujours $\alpha_1$ et on procède de la même façon que celle décrite précédemment.
+\item Si les variables ne sont pas cointégrées alors qu’elles sont intégrées d’ordre 1, alors on peut les étudier en appliquant les méthodes habituelles aux séries des différences premières.
+\item Si les variables sont cointégrées, alors passer à l’étape 3.
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Étape 3:}
+\begin{itemize}
+\item Si les variables sont cointégrées, les résidus (stationnaires) de la relation de long terme peuvent être utilisés pour estimer le modèle de correction d’erreur
+\item À cette étape, on remplace le terme de correction d’erreur, $Y_{t-1}-\beta_0+\beta_1 X_{t-1}$ par le terme correspondant estimé, les résidus,soit $\hat{e}_{t-1}$.
+\item On obtient le modèle de correction d’erreur :
+\begin{align*}
+\Delta Y_t=a_{y0}+c_y(\hat{e}_{t-1})+\sum a_{yyi}\Delta Y_{t-i}+\sum a_{yxi} \Delta X_{t-i}+\epsilon_{yt}
+\end{align*}
+\begin{align*}
+\Delta X_t=a_{x0}+c_x(\hat{e}_{t-1})+\sum a_{xyi}\Delta Y_{t-i}+\sum a_{xxi} \Delta X_{t-i}+\epsilon_{xt}
+\end{align*}
+\item Comme les deux équations ont le même ensemble de régresseurs, et que toutes les variables du modèle sont stationnaires, on peut estimer ce modèle par les moindres carrés ordinaires.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Étape 4:}
+\begin{itemize}
+\item Vérifier que le modèle est bien spécifié. Les deux séries de résidus du modèle de correction d’erreur doivent être des processus bruit blanc.
+\item Si les résidus sont autocorrélés, alors c’est que l’on n’a pas introduit suffisamment de retards dans le modèle ; il faut réestimer le modèle en augmentant le nombre de retards.
+\end{itemize}
+\end{frame}
+
+
+\end{document}

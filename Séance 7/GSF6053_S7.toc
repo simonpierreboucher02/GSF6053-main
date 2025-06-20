@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{Autocorrélation des erreurs}{4}{0}{1}
+\beamer@sectionintoc {2}{Transformation de Prais-Waisten}{23}{0}{2}
+\beamer@sectionintoc {3}{Transformation de Cochran-Orcutt}{27}{0}{3}
+\beamer@sectionintoc {4}{Le problème de $\rho $}{29}{0}{4}
+\beamer@sectionintoc {5}{Diagnostique de l'autocorrélation}{34}{0}{5}
+\beamer@sectionintoc {6}{Estimateur Robuste de Newey West}{41}{0}{6}

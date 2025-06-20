@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Maximum de Vraissemblance}{4}{0}{1}
+\beamer@sectionintoc {2}{MLE: Modèle de régression linéaire}{7}{0}{2}
+\beamer@sectionintoc {3}{Propriétés Estimateur MLE ET MCO}{14}{0}{3}
+\beamer@sectionintoc {4}{Propriétés de $\hat {\sigma }^2$}{34}{0}{4}
+\beamer@sectionintoc {5}{Estimateur de la variance sans biais}{40}{0}{5}

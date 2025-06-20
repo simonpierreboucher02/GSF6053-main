@@ -1,0 +1,584 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usetheme{default}
+\usecolortheme{default}
+
+\title[S02 Régression et MCO]{Section 05 : Les séries chronologiques\\ (Séance 12)}
+\subtitle{GSF-6053: Économétrie Financière}
+\author[SP. Boucher]{Simon-Pierre Boucher\inst{1}}
+\institute[Université Laval]
+{
+  \inst{1}%
+  Département de finance, assurance et immobilier\\
+  Faculté des sciences de l'administration\\
+  Université Laval}
+\date[Hiver 2022]{12 avril 2022}
+
+\begin{document}
+
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+
+\begin{frame}{Références}
+\textbf{Obligatoires:}
+\begin{itemize}
+\item \textbf{Notes de cours:} Section 5 (Professeure: Marie-Hélène Gagnon)
+\item \textbf{Woolridge:} chapitres 11, 12 et 19.
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Complémentaires:}
+\begin{itemize}
+\item \textbf{Gujarati et Porter:} chapitres 21 et 22
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Plan de la séance}
+  \tableofcontents
+\end{frame}
+
+\section{Processus moyennes mobiles}
+\frame{\tableofcontents[current]}
+\begin{frame}{Processus moyennes mobiles}
+\begin{itemize}
+\item Soit $\left\{ \epsilon_t \right\}$ un processus bruit blanc. 
+\item Considérons le processus $\left\{Y_t \right\}$  défini à partir de \left\{ \epsilon_t \right\}  comme suit :
+\begin{align*}
+Y_t=\mu+\epsilon_t+\theta \epsilon_{t-1}
+\end{align*}
+où $\mu$, $\theta$ sont des paramètres constants
+\item En d’autres termes, le processus $\left\{Y_t \right\}$ est une moyenne pondérée du présent et du passé immédiat de $\left\{ \epsilon_t \right\}$ , à une constante additive près. 
+\item On dit que le processus $\left\{Y_t \right\}$ est un processus moyenne mobile d’ordre 1, et on note MA (1). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre 1}
+\textbf{La moyenne non conditionnelle du processus est}
+\begin{align*}
+E(Y_t)&=\mu+E(\epsilon_t)+\theta E(\epsilon_{t-1})\\ & = \mu
+\end{align*}
+Sachant:
+\begin{itemize}
+\item $Var(\epsilon_t)=Var(\epsilon_{t-1})=\sigma^2$
+\item $Cov(\epsilon_t,\epsilon_{t-1})=Cov(\epsilon_t,\epsilon_{t-2})=0$
+\end{itemize}
+\textbf{La variance du processus est}
+\begin{align*}
+Var(Y_t)&=E(Y_t-\mu)^2 \\& = E(\epsilon_t+\theta \epsilon_{t-1})^2 \\ & = (1+\theta^2)\sigma^2
+\end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre 1}
+\textbf{L’autocovariance du processus est}
+\begin{align*}
+\gamma(1)&=E(Y_t-\mu)(Y_{t-1}-\mu)\\ & =E(\epsilon_t+\theta \epsilon_{t-1})(\epsilon_{t-1}+\theta \epsilon_{t-2})\\ & = \theta \sigma^2
+\end{align*}
+\begin{itemize}
+\item Les autocovariances d’ordre supérieur à 1 sont nulles comme on peut le vérifier en utilisant le fait que
+\begin{align*}
+Cov(\epsilon_t,\epsilon_{t-h})=Cov(\epsilon_t,\epsilon_{t-h-1})=0, \forall h >1
+\end{align*}
+
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre 1}
+\begin{itemize}
+\item Tout processus MA(1) est faiblement stationnaire, car c’est une combinaison linéaire de bruits blancs et ces deux premiers moments satisfont les conditions de stationnarité peu importe la valeur prise par les coefficients estimés.
+\item La fonction d’autocorrélation ρ est définie par :
+\begin{align*}
+\rho(h)=\frac{\rho(h)}{\rho(0)}=\left\{\begin{matrix}
+1 \hspace{0.5cm} si \hspace{0.5cm} h=0  \\ 
+\frac{\theta}{1+\theta^2} \hspace{0.5cm} si \hspace{0.5cm} h=1  \\ 
+0  \hspace{0.5cm} si \hspace{0.5cm} h>1  
+\end{matrix}\right.
+\end{align*}
+\item La fonction d’autocorrélation devient nulle après une période; le signe de $\theta$ détermine le sens (négatif ou positif) de l’autocorrélation d’ordre 1.
+\item La fonction d’autocorrélation ne change pas si $\theta$ est remplacé par $1/\theta$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre q}
+\textbf{Considérons maintenant le processus $\left\{Y_t \right\}$ défini par:}
+\begin{align*}
+Y_t=\mu+\sum_{j=0}^q \theta_j \epsilon_{t-j}
+\end{align*}
+avec $\theta_0=1$ et $\left\{ \epsilon_t \right\}$ est un processus bruit blanc.
+\begin{itemize}
+\item Alors, $\left\{Y_t \right\}$ est un processus moyenne mobile d’ordre q, on note MA(q).
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre q}
+\begin{itemize}
+\item En utilisant les propriétés du processus bruit blanc, on obtient :
+\begin{align*}
+E(Y_t)=\mu
+\end{align*}
+\begin{align*}
+\gamma(h)=\left\{\begin{matrix}
+(1+\theta_1^2+\theta_2^2+\cdots+\theta_q^2)\sigma^2 \hspace{0.5cm} si \hspace{0.5cm} h=0  \\ 
+(\theta_h+\theta_{h+1}\theta_1+\theta_{h+2}\theta_2+\cdots+\theta_q\theta_{q-h})\sigma^2 \hspace{0.1cm} si\hspace{0.1cm}h=1,2,..,q  \\ 
+0  \hspace{0.5cm} si \hspace{0.5cm} h>q  
+\end{matrix}\right.
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre q}
+\begin{itemize}
+\item Le processus est donc stationnaire quelles que soit les valeurs des paramètres $\theta_j$, $j = 1, 2, \cdots, q$. 
+\item La fonction d’autocorrélation devient nulle après un délai de q périodes.
+\item Plus généralement, définissons le processus limite du processus mobile d’ordre $q$ lorsque $q \rightarrow \infty$. Cette limite s’écrit :
+\begin{align*}
+Y_t=\mu+\sum_{j=0}^{\infty} \psi_j \epsilon_{t-j}
+\end{align*}
+\item Et est appelé moyenne mobile d’ordre infini, note $MA(\infty)$.
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus moyennes mobiles}
+\begin{block}{Processus moyenne mobile d’ordre q}
+Si
+\begin{align*}
+\sum_{j=0}^{\infty} \psi_j^2 <\infty
+\end{align*}
+\begin{itemize}
+\item Alors le processus moyenne mobile d’ordre infini est faiblement stationnaire. 
+\item Sa moyenne, variance et autocovariance sont obtenues comme limites de la moyenne, de la variance et des autocovariances du processus moyenne mobile d’ordre q lorsque $q \rightarrow \infty$
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\section{Processus autoregressifs}
+\frame{\tableofcontents[current]}
+\begin{frame}{Processus autoregressifs}
+\begin{itemize}
+\item Un processus autorégressif d’ordre p est un processus qui satisfait une équation linéaire en différence stochastique d’ordre p de la forme :
+\begin{align*}
+Y_t=c+\sum_{j=1}^p\psi_jY_{t-j}+\epsilon_t
+\end{align*}
+où $\left\{ \epsilon_t \right\}$ est un bruit blanc $(0,\sigma^2)$.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 1}
+\begin{align*}
+Y_t=c+\phi Y_{t-1}+\epsilon_t
+\end{align*}
+\begin{itemize}
+\item Sait que si $\mid \phi \mid \ge 1$, le processus explose ; le processus ne peut pas être stationnaire. 
+\item Par contre, si $\mid \phi \mid < 1$, le processus est stable et on montre qu’il est faiblement stationnaire.
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 1}
+\begin{itemize}
+\item  En effet, si $\phi < 1$, on obtient en faisant de la substitution récursive :
+\begin{align*}
+Y_t & =(c+\epsilon_t)+\phi(c+\epsilon_t+\phi Y_{t-2})\\ & = (c+\epsilon_t) +\phi (c+\epsilon_{t-1})+\phi^2( c+\epsilon_{t-2}+\phi Y_{t-3})\\ & = (c+\epsilon_t) +\phi (c+\epsilon_{t-1})+ \phi^2 (c+\epsilon_{t-2})+\phi^3 (c+\epsilon_{t-3})+\cdots \\ & = c(1+\phi+\phi^2+\phi^3+\cdots)+\epsilon_t+\phi \epsilon_{t-1}+\phi^2\epsilon_{2}+\phi^3\epsilon_{3}+\cdots \\ & = \frac{c}{1-\phi}+\epsilon_t+\phi \epsilon_{t-1}+\phi^2\epsilon_{2}+\phi^3\epsilon_{3}+\cdots
+\end{align*}
+\item Ce résultat montre que le processus AR(1) peut s’écrire comme un processus $MA(\infty)$
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 1}
+\textbf{Son espérance :}
+\begin{align*}
+\mu = E(Y_t)=\frac{c}{1-\phi}
+\end{align*}
+\textbf{Sa variance :}
+\begin{align*}
+\gamma(0)&=E(Y_t-\mu)^2 \\ & = E(\epsilon_t+\phi \epsilon_{t-1}+\phi^2 \epsilon_{t-2}+\phi^3 \epsilon_{t-3}+\cdots)^2 \\ & = (1+\phi^2+\phi^4+\phi^6+\cdots)\sigma^2 \\ & = \frac{\sigma^2}{1-\phi^2}
+\end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 1}
+\textbf{L’autocovariance d’ordre h :}
+\begin{align*}
+\gamma(h) & =E(Y_t-\mu)(Y_{t-h}-\mu) \\ & = E(\epsilon_t+\phi \epsilon_{t-1}+\phi^2 \epsilon_{t-2}+\phi^3 \epsilon_{t-3} \\ & +\cdots+\phi^h\epsilon_{t-h}+\phi^{h+1}\epsilon_{t-h-1}+\cdots) \\ & \times (\epsilon_{t-h} +\phi \epsilon_{t-h-1} +\phi^2\epsilon_{t-h-2}+\phi^3\epsilon_{t-h-3}+\cdots) \\ & = E(\phi^h\epsilon_{t-h}+\phi^{h+1}\epsilon_{t-h-1}) \\ & \times(\epsilon_{t-h} +\phi \epsilon_{t-h-1} +\phi^2\epsilon_{t-h-2}+\phi^3\epsilon_{t-h-3}) \\ & =\phi^hE(\epsilon_{t-h} +\phi \epsilon_{t-h-1} +\phi^2\epsilon_{t-h-2}+\phi^3\epsilon_{t-h-3}+\cdots)^2 \\ & = \frac{\phi^h\sigma^2}{1-\phi^2}
+\end{align*}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 1}
+\textbf{La fonction d’autocorrélation $\rho$ :}
+\begin{align*}
+\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h
+\end{align*}
+et puisque $\mid \phi \mid < 1$, l’autocorrélation $\rho(h)$ décroit lorsque le retard h augmente.
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 2}
+
+\begin{align*}
+Y_t=c+\phi_1 Y_{t-1}+\phi_2 Y_{t-2}+\epsilon_t
+\end{align*}
+\begin{itemize}
+\item Ou encore sous la forme avec l’opération retard :
+\end{itemize}
+\begin{align*}
+(1-\phi_1L-\phi_2L^2)Y_t=c+\epsilon_t
+\end{align*}
+\begin{itemize}
+\item  Il n’est plus évident de savoir si le processus est stationnaire seulement en regardant la valeur d’un coefficient comme dans le cas AR(1).
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 2}
+
+\begin{itemize}
+\item \textbf{Résultat connu que nous exploitons:} On sait que cette équation en différence est stable si les racines $\lambda_1$ et $\lambda_2$ de l’équation caractéristique suivante
+\end{itemize}
+\begin{align*}
+\lambda^2-\phi_1\lambda-\phi_2=0
+\end{align*}
+\begin{itemize}
+Sont de module inférieur à l’unité.
+
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 2}
+\begin{itemize}
+\item Lorsque les racines sont réelles, elles sont données par la formule habituelle :
+
+\begin{align*}
+\lambda_1 = \frac{\phi_1+\sqrt{\phi_1^2+4\phi_2}}{2}
+\end{align*}
+\begin{align*}
+\lambda_2 = \frac{\phi_1+\sqrt{\phi_1^2+4\phi_2}}{2}
+\end{align*}
+\item Alors $(1-\phi_1 L-\phi_2 L^2  )=(1-\lambda_1L)(1-\lambda_2L)$
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 2}
+\textbf{La moyenne du AR(2) est donnée par}
+\begin{align*}
+\mu=E(Y_t)=\frac{c}{1-\phi_1-\phi_2}
+\end{align*}
+\begin{itemize}
+\item Ce qui revient à  en prenant le processus en déviation par rapport à la moyenne:
+\begin{align*}
+(Y_t-\mu)=\phi_1(Y_{t-1}-\mu)+\phi_2(Y_{t-2}-\mu)+\epsilon_t
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre 2}
+\begin{itemize}
+\item Multiplier les deux membres de cette dernière relation par $(Y_{t-h}-\mu),h \geq 0$ et prendre l’espérance pour obtenir la fonction pour les autocovariances suivantes :
+\begin{align*}
+\gamma(h)=\left\{\begin{matrix}
+\phi_1 \gamma(h-1)+\phi_2\gamma(h-2) \hspace{0.5cm} si \hspace{0.5cm} h\ge0  \\ 
+\phi_1 \gamma(1)+\phi_2 \gamma(2)+\sigma^2  \hspace{0.5cm} si \hspace{0.5cm} h=0  
+\end{matrix}\right.
+\end{align*}
+\item Les autocorrélations obéissent également à une suite récurrente d’ordre 2 :
+\begin{align*}
+\rho(h)=\phi_1 \rho(h-1)+\phi_2 \rho(h-2)  \hspace{0.5cm} si \hspace{0.5cm} h\ge1
+\end{align*}
+\item On peut alors calculer $\rho(1)$ , $\rho(2)$ , puis obtenir
+\begin{align*}
+\gamma(0)=\frac{(1-\phi_2)\sigma^2}{(1+\phi_2)[(1-\phi_2)^2-\phi_1^2]}
+\end{align*}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre p}
+\begin{align*}
+Y_t=c+\sum_{j=1}^p\phi_jY_{t-j}+\epsilon_t
+\end{align*}
+\textbf{Les racines de l'équation:}
+\begin{align*}
+\lambda^p-\phi_1\lambda^{p-1}-\phi_2\lambda^{p-2}-\cdots -\phi_{p-1}\lambda-\phi_p
+\end{align*}
+\begin{itemize}
+\item Sont de module inférieur à l’unité, le processus est stable et faiblement stationnaire 
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Processus autoregressifs}
+\begin{block}{Processus autorégressif d’ordre p}
+\begin{align*}
+\mu=E(Y_t)=\frac{c}{1-\phi_1+\phi_2-\cdots-\phi_p}
+\end{align*}
+\textbf{On obtient de même une relation de récurrence d’ordre p pour les autocovariances:}
+\begin{align*}
+\gamma(h)=\left\{\begin{matrix}
+\phi_1 \gamma(h-1)+\phi_2\gamma(h-2)+\cdots+\phi_p\gamma(h-p) \hspace{0.5cm} si \hspace{0.5cm} h\ge 1  \\ 
+\sum_{i=1}^{p}\phi_i\gamma (i)+\sigma^2 \hspace{0.5cm} si \hspace{0.5cm} h=0  
+\end{matrix}\right.
+\end{align*}
+\textbf{La même relation de récurrence vérifiée par les autocorrélations:}
+\begin{align*}
+\rho(h)= \phi_1 \rho(h-1)+\phi_2\rho(h-2)+\cdots+\phi_p\rho(h-p)
+\end{align*}
+\end{block}
+\end{frame}
+
+\section{Processus ARMA (P,Q)}
+\frame{\tableofcontents[current]}
+\begin{frame}{Processus ARMA (P,Q)}
+\begin{itemize}
+\item Un processus $\left\{ Y_t \right\}$ qui contient à la fois des termes autorégressifs à l’ordre p et des termes moyennes mobiles à l’ordre q est dit processus ARMA$(p,q)$.
+\item Le processus ARMA (p, q) vérifie une équation en différence stochastique du type :
+\begin{align*}
+Y_t=c+\phi_1 Y_{t-1}+  \phi_2 Y_{t-2}+ \cdots +\phi_p Y_{t-p} \\ +\epsilon_t+\theta \epsilon_{t-1}+ \theta_2 \epsilon_{t-2}+\cdots+\theta_q \epsilon_{t-q}
+\end{align*}
+\begin{align*}
+(1-L\phi_1-L^2\phi_2-\cdots- L^p)Y_t \\ =c+(1+\theta_1L +\theta_2L^2+\cdots+\theta_qL^q)\epsilon_t
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Processus ARMA (P,Q)}
+\begin{itemize}
+\item La partie moyenne mobile du processus ARMA(p, q) étant toujours stationnaire, le processus est stationnaire si la partie autorégressive est stationnaire.
+\item Donc, la condition de stationnarité du processus ARMA(p, q) est que les racines de l’équation
+\begin{align*}
+\lambda^p-\phi_1\lambda^{p-1}-\phi_2\lambda^{p-2}-\cdots -\phi_{p-1}\lambda-\phi_p
+\end{align*}
+sont de module inférieur à l’unité.
+\item Dans ce cas, la moyenne est 
+\begin{align*}
+\mu=E(Y_t)=\frac{c}{1-\phi_1+\phi_2-\cdots-\phi_p}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Processus ARMA (P,Q)}
+\begin{itemize}
+\item Pour identifier les ordres $p$ et/ou $q$ d’un processus $ARMA(p,q)$ stationnaire, on peut fort utilement se servir des 
+\begin{itemize}
+\item Fonctions d’autocorrélation d’échantillon (graphiques corrélogramme et ACF). 
+\item Fonctions d’autocorrélation partielle d’échantillon (graphiques corrélogramme et PACF). 
+
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Processus ARMA (P,Q)}
+\begin{itemize}
+\item On utilise les propriétés suivantes:
+\begin{enumerate}
+\item Les autocorrélations d’un processus $ARMA(p,q)$ commencent à décroître et tendre vers 0 après q retards.
+\item Les autocorrélations partielles d’un processus $ARMA(p,q)$ commencent à décroître et tendre vers 0 après p retards.
+\item Pour un processus $AR(p)$ , les autocorrélations partielles deviennent abruptement nulles (donc très faibles et non significatives) après p retards.
+\item Pour un processus $MA(q)$, les autocorrélations deviennent abruptement nulles (donc très faibles et non significatives) après q retards.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Processus ARMA (P,Q)}
+\begin{itemize}
+\item Lorsqu’on sort de cette étape d’identification avec plus d’un modèle, on peut utiliser des critères de sélection de modèles pour choisir un modèle parmi ceux qui sont potentiellement candidats pour expliquer les données.
+\item Les deux critères de sélection de modèles les plus utilisés sont
+\begin{itemize}
+\item Le critère d’information d’Akaike \textbf{(Akaike Information Criterion, AIC)}  
+\item Le critère bayésien de Schwartz \textbf{(Schwartz Bayesian Criterion, SBC)}.
+
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Processus ARMA (P,Q)}
+\begin{itemize}
+\item Pour un modèle donné, on procède à l’estimation et on calcule à l’aide des formules suivantes :
+\begin{align*}
+AIC = T \times ln\textbf{(somme des carrés des résidus)} + 2n
+\end{align*}
+\begin{align*}
+SBC = T \times ln\textbf{(somme des carrés des résidus)} + n ln(T)
+\end{align*}
+\begin{itemize}
+\item Où $T$ est le nombre d’observations utilisées pour faire l’estimation, n est le nombre de paramètres estimés 
+\item Pour un $ARMA(p,q)$ , $n = p + q+ \textbf{possible intercepte}$.
+\end{itemize}
+\item Les valeurs de AIC et SBC devraient être les plus faibles possible (à meilleur ajustement, une plus grande proximité entre observations et ajustements, donc plus faibles résidus). 
+\item Donc, en comparant deux modèles à l’aide de l’un de ces critères, on choisira le modèle pour lequel le critère utilisé est le plus petit.
+\end{itemize}
+\end{frame}
+
+\section{Processus ARIMA (P,D,Q)}
+\frame{\tableofcontents[current]}
+\begin{frame}{Processus ARIMA (P,D,Q)}
+\begin{itemize}
+\item Si un processus ARMA(P,Q) n’est pas stationnaire, on peut
+\begin{itemize}
+\item Introduire une fonction du temps pour enlever une éventuelle tendance.
+\item Le différencier.
+\end{itemize}
+\item En supposant que la série non stationnaire est intégrée d’ordre d, la série obtenue après d différences premières est stationnaire.
+\item Si cette nouvelle série peut être modélisée comme réalisation d’un processus $ARMA(p,q)$, on dit que la série initiale suit un processus $ARIMA(p, d, q)$.
+\item Dans cette représentation, le $I$ est pour intégré, et le $d$ est pour l’ordre d’intégration.
+\item Le processus $ARIMA(p,d,q)$ s’étudie de la même manière qu’un processus $ARMA(p,q)$ après l’avoir différencié $d$ fois.
+\end{itemize}
+\end{frame}
+
+\section{L’analyse Box-Jenkins}
+\frame{\tableofcontents[current]}
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{itemize}
+\item L’analyse Box-Jenkins fournit une méthodologie pour identifier le type du processus qui nous intéresse. Les quatre étapes de la méthode de Box-Jenkins sont :
+\begin{enumerate}
+\item Identification 
+\item Estimation 
+\item Diagnostique 
+\item Prévision
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{block}{Identification}
+\begin{itemize}
+\item La première chose à faire est de représenter la série par un graphique temporel pour voir son évolution dans le temps. 
+\begin{itemize}
+\item C’est une étape qui vise à identifier visuellement si la série a des bris, une tendance, des clusters de volatilité, etc.
+\end{itemize}
+\item Testez la stationnarité: On doit avoir une série stationnaire pour procéder à l’analyse Box-Jenkins. 
+\begin{itemize}
+\item On utilise donc le test de Dickey-Fuller (ou Philipps-Perron) approprié pour investiguer la stationnarité. 
+\item Si la série n’est pas stationnaire, il faut la différencier. 
+\end{itemize}
+\item Il faut ensuite estimer et évaluer les autocorrélations et les autocorrélations partielles. 
+\begin{itemize}
+\item Elles peuvent difficile à étudier puisqu’il faut se rappeler que vous observez une réalisation du processus et non le processus lui-même et que les autocorrélations et autocorrélations partielles sont estimées elle aussi. 
+\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{block}{Identification}
+\begin{itemize}
+
+\item Il faut ensuite estimer et évaluer les autocorrélations et les autocorrélations partielles. 
+\begin{itemize}
+\item En général, on reconnait les évolutions suivantes sur les processus:
+\begin{table}[]
+\begin{tabular}{@{}|l|l|l|@{}}
+\toprule
+\textbf{Type de modèle} & \textbf{Autocorrélations}                                                                                  & \textbf{\begin{tabular}[c]{@{}l@{}}Autocorrélations \\ partielles\end{tabular}}                            \\ \midrule
+\textbf{AR(p)}          & \begin{tabular}[c]{@{}l@{}}Décrois \\ exponentiellement \\ ou en oscillant\end{tabular}                    & \begin{tabular}[c]{@{}l@{}}Significatif \\ jusqu’à p\end{tabular}                                          \\ \midrule
+\textbf{MA(q)}          & \begin{tabular}[c]{@{}l@{}}Significatif \\ jusqu’à q\end{tabular}                                          & \begin{tabular}[c]{@{}l@{}}Décrois \\ exponentiellement\end{tabular}                                       \\ \midrule
+\textbf{ARMA (p,q)}     & \begin{tabular}[c]{@{}l@{}}Décrois \\ exponentiellement \\ ou en oscillant \\ après le lag q.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Décrois \\ exponentiellement \\ ou en oscillant \\ après le lag p.\end{tabular} \\ \bottomrule
+\end{tabular}
+\end{table}
+\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{block}{Identification}
+\begin{itemize}
+\item Box-Jenkins suggère d’avoir les modèles les plus parcimonieux possible. 
+\item Dans l’analyse des autocorrélations et des autocorrélations partielles, il convient de prioriser les choix de modèle le plus parcimonieux sans toutefois négliger des retards significatifs.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{block}{Estimation}
+\begin{itemize}
+\item Estimez le modèle retenu. 
+\item Lorsque plusieurs modèles ont été retenus à l’étape précédente, il faut tous les estimer. 
+\item On choisit le meilleur modèle avec les critères de décision disponibles : $R^2$, test $F$ ou test $LR$ si vous tester des modèles emboités, $AIC/SBC$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{block}{Diagnostique}
+\begin{itemize}
+\item Faire un graphique des résidus du modèle choisi.
+\begin{itemize} 
+\item Il peut être plus facile de travailler avec des résidus standardisés par l’écart type pour voir les observations extrêmes.
+\end{itemize}
+\item Tester si les résidus présentent : des autocorrélations, des effets ARCH ou de l’hétéroscédasticité. 
+\begin{itemize}
+\item Testez que les résidus sont bruits blancs avec un test portemanteau.
+\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{L’analyse Box-Jenkins}
+\begin{block}{Prévision}
+\begin{itemize}
+\item À partir du processus identifié, on peut faire de la prévision (souvent utilisé pour e court terme). 
+\item Cette partie est présentée plus en détail dans les notes de la section 5.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}

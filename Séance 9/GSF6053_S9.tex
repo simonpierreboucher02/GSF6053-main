@@ -1,0 +1,502 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usetheme{default}
+\usecolortheme{default}
+
+\title[S02 Régression et MCO]{Section 04 : Les modèles panels\\ (Séance 9)}
+\subtitle{GSF-6053: Économétrie Financière}
+\author[SP. Boucher]{Simon-Pierre Boucher\inst{1}}
+\institute[Université Laval]
+{
+  \inst{1}%
+  Département de finance, assurance et immobilier\\
+  Faculté des sciences de l'administration\\
+  Université Laval}
+\date[Hiver 2022]{22 Mars 2022}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Références}
+\textbf{Obligatoires:}
+\begin{itemize}
+\item \textbf{Notes de cours:} Section 4 (Professeure: Marie-Hélène Gagnon)
+\item \textbf{Woolridge:} chapitres 13 et 14.
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Complémentaires:}
+\begin{itemize}
+\item \textbf{Gujarati et Porter:} chapitre 16
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Plan de la séance}
+  \tableofcontents
+\end{frame}
+
+\section{Le modèle within group estimator}
+\frame{\tableofcontents[current]}
+\begin{frame}{Le modèle within group estimator}
+\begin{itemize}
+\item Le problème est que, typiquement, N est grand dans une base de données panel (surtout dans les panels courts ou si on veut un effet fixe temporel dans un panel long, par exemple).
+\item Il sera donc difficile de passer par l’estimation des alphas.
+\item On voudrait donc seulement estimer des coefficients de régressions sur les X qui tiennent compte des caractéristiques dans les dummies, mais sans les estimer. 
+\item On peut obtenir ce résultat en purgeant (orthogonaisant) la régression des effets de la matrice D.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Le modèle within group estimator}
+\begin{block}{Modèle transformé}
+\begin{itemize}
+\item Le modèle est prémultiplié par la matrice de projection des dummies
+\begin{align*}
+M_D=I-D(D'D)^{-1}D'=\begin{bmatrix} 
+M^{0} & 0 & \cdots & 0 \\
+0 & M^0 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & M^0
+\end{bmatrix} 
+\end{align*}
+\item $M_D$ est de dimension $NT \times NT$ avec $N$ matrice $M^0$ sur la diagonale de dimension $T \times T$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Le modèle within group estimator}
+\begin{block}{Modèle transformé}
+\begin{align*}
+M_D y = M_D X\beta + M_D D_{\alpha}+M_D+u
+\end{align*}
+\textbf{On obtient estimateur OLS de $\beta$:}
+\begin{align*}
+\hat{b}= (X'M_DX)^{-1}(X'M_Dy)
+\end{align*}
+\begin{itemize}
+\item Cet estimé permet d’obtenir les résidus qui nous intéressent et d’avoir des coefficients représentant l’effet des régresseurs sur la variable dépendante sans estimer $\alpha$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Le modèle within group estimator}
+\textbf{Impact de cette transformation}
+\begin{align*}
+M^0Y_i & = \left( I_T-\frac{1}{T}\wr_T\wr_T^{'}\right)Y_i  \\ & = \left(\begin{bmatrix} 
+1 & 0 & \cdots & 0 \\
+0 & 1 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & 1
+\end{bmatrix}-\frac{1}{T} \begin{bmatrix} 
+1 & 1 & \cdots & 1 \\
+1 & 1 & \cdots & 1 \\
+\vdots & \vdots & \ddots & \vdots \\
+1 & 1 & 1 & 1
+\end{bmatrix}  \right)
+\begin{bmatrix} 
+Y_{i1}\\
+Y_{i2}\\
+\vdots\\
+Y_{iT}
+\end{bmatrix} \\ & = \begin{bmatrix} 
+Y_{i1}\\
+Y_{i2}\\
+\vdots\\
+Y_{iT}
+\end{bmatrix} -\frac{1}{T} \begin{bmatrix} 
+\sum_{t=1}^TY_{it}\\
+\sum_{t=1}^TY_{it}\\
+\vdots\\
+\sum_{t=1}^TY_{it}
+\end{bmatrix} = \begin{bmatrix} 
+Y_{i1}\\
+Y_{i2}\\
+\vdots\\
+Y_{iT}
+\end{bmatrix}-\begin{bmatrix} 
+\hat{Y}_i\\
+\hat{Y}_i\\
+\vdots\\
+\hat{Y}_i
+\end{bmatrix}= Y_i-\hat{Y}_i \wr_T
+\end{align*}
+\end{frame}
+
+\begin{frame}{Le modèle within group estimator}
+\textbf{La régression transformée:}
+\begin{align*}
+(Y_i-\hat{Y}_i)=(X_i-\hat{X}_i) \beta+(u_i-\hat{u}_i)
+\end{align*}
+\begin{itemize}
+\item Cette transformation donne donc le modèle avec les variables prises en écarts à la moyenne (ce qui élimine l’intercepte et les dummies).
+\item Donc, le modèle $M_D y = M_D X\beta + M_D D_{\alpha}+M_D+u$ représente les variations autour des moyennes de chaque groupe $i$ \textbf{(WHITIN REGRESSION)}. 
+\item  L’intuition est quand enlevant la moyenne de chaque groupe, on enlève la partie de la régression qui est propre à ce groupe sans avoir à l’estimer par des coefficients dummy.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Le modèle within group estimator}
+\begin{itemize}
+\item Les estimateurs within group sont convergents, mais non efficaces.
+\item Le gros désavantage de l’estimateur within group est qu’il est impossible d’ajouter d’autres variables non variantes dans le temps, mais observables, car leur déviation par rapport à la moyenne du groupe est nulle. 
+\item En enlevant la moyenne, on enlève aussi les effets de long terme (que la moyenne échantillonnale peut changer dans le temps!) pour ne regarder que les effets de court terme.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Le modèle within group estimator}
+\begin{itemize}
+\item Pour obtenir les interceptes que nous n’avons pas estimés dans le modèle within group :
+\begin{align*}
+\hat{\alpha}_i=\overline{Y}_i-\hat{b}^{'}\overline{X}_i
+\end{align*}
+\item Sachant les éléments suivants:
+\begin{itemize}
+\item $\overline{X}_i=\begin{bmatrix} 
+\overline{X}_{i1} & \overline{X}_{i2} & \cdots & \overline{X}_{iK}
+\end{bmatrix}$
+\item $\overline{X}_{iK}=\frac{1}{T}\sum_{t=1}^{T}X_{itk}$
+\item $\overline{Y}_{i}=\frac{1}{T}\sum_{t=1}^{T}X_{it}$
+\end{itemize}
+\item $\overline{X}$ et $\overline{Y}$ sont les moyennes sur tout l'échantillon des $N \times T$ observations.
+\end{itemize}
+\end{frame}
+
+\section{Le modèle panel avec effets aléatoires}
+\frame{\tableofcontents[current]}
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\begin{itemize}
+\item Postuler que la composante de groupe se retrouve dans le terme d’erreur plutôt que dans les régresseurs.
+\item Cette composante de groupe est aléatoire et non corrélée avec les régresseurs.
+\item Soit
+\begin{align*}
+Y_{it}=\beta'X_{it}+\gamma +\mu_i+u_{it}
+\end{align*}
+\item L'erreur sera:
+\begin{align*}
+\mu_i+u_{it}
+\end{align*}
+\item $X_{it}$ est la t-ième ligne de la matrice $X_i$, $i=1,\cdots,N$ et $t=1,\cdots,T$
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\begin{block}{Composante aléatoire (random effect)}
+\begin{itemize}
+\item représenté par $\mu_i$
+\item Cette composante est la partie du terme d’erreur (non observable) qui ne varie pas dans le temps, mais varie entre les équations. 
+\end{itemize}
+\end{block}
+\begin{block}{Composante du terme d’erreur (non observable) usuel}
+\begin{itemize}
+\item représenté par $u_{it}$
+\item Il varie d’observation en observation, dans le temps et entre les équations.
+\item C’est un terme d’erreur standard.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\textbf{On doit faire des hypothèses sur ces composantes du terme d’erreur:}
+\begin{itemize}
+\item Les deux composantes du terme d’erreur ne sont pas corrélées 
+\item Le terme $u_{i}$
+\begin{align*}
+E(u_i)=0 \\
+E(u_iu_i^{'})=\sigma_u^2I_T\\
+E(u_iu_j^{'})=0 \\
+\forall i
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\textbf{On doit faire des hypothèses sur ces composantes du terme d’erreur:}
+\begin{itemize}
+\item Le terme $\mu_{i}$
+\begin{align*}
+E(\mu_i)=0 \\
+E(\mu_i^2)=\sigma_{\mu}^2\\
+E(\mu_i \mu_j)=0 \\
+\forall i
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\textbf{Le modèle Panel-random-coefficient se réécrit comme suit:}
+\begin{align*}
+Y_i=X_i \beta+u_i+\wr_T \gamma +\wr_T \mu_i
+\end{align*}
+avec 
+\begin{align*}
+\begin{bmatrix} 
+1 \\
+1 \\
+\vdots \\
+1
+\end{bmatrix}
+\end{align*}
+Évidemment, la matrice de régresseurs $X_i$ est sans colonne de 1.
+\end{frame}
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\textbf{Dans le cas du modèle Panel-Random-Coefficient:}
+\begin{align*}
+E[(u_i+\wr_T\mu_i)(u_i+\wr_T \mu_i)']
+& = E(u_iu_i^{'})+E[u_i(\wr_T\mu_{i})'] \\ &+E[(\wr_T\mu_{i})u_i^{'}]+E[(\wr_T\mu_i)(\wr_T\mu_i)^{'}] \\ &
+=\sigma_u^2 I_T +0+0+E[\mu_i \wr_T\wr_T^{'}\mu_{i}^{'}] \\ &
+=\sigma_u^2 I_T+0+0+E[\mu_i^2 \wr_T\wr_T^{'}]
+\end{align*}
+\begin{itemize}
+\item En sacant que $\mu_i$ est un scalaire aléatoire
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\textbf{Dans le cas du modèle Panel-Random-Coefficient:}
+\begin{align*}
+E[\mu_i^2 \wr_T \wr_T^{'}] = E \begin{bmatrix} 
+\mu_i^2 & \mu_i^2 & \cdots & \mu_i^2\\
+\mu_i^2 & \mu_i^2 & \cdots & \mu_i^2\\
+\vdots & \vdots & \ddots & \vdots \\
+\mu_i^2 & \mu_i^2 & \mu_i^2 & \mu_i^2
+\end{bmatrix}=
+\begin{bmatrix} 
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2\\
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2\\
+\vdots & \vdots & \ddots & \vdots \\
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \sigma_{\mu}^2 & \sigma_{\mu}^2
+\end{bmatrix}
+\end{align*}
+Et donc 
+\begin{align*}
+E(u_i+\wr_T \mu_i)(u_i+\wr_T \mu_i)'=\sigma_u^2 I_T+E[\mu_i \wr_T \wr_T^{'}\mu_i{'}]
+\end{align*}
+\end{frame}
+
+\begin{frame}{Le modèle panel avec effets aléatoires}
+\textbf{Dans le cas du modèle Panel-Random-Coefficient:}
+\begin{align*}
+V & =\begin{bmatrix} 
+\sigma_{u}^2 & 0 & \cdots & 0\\
+0 & \sigma_{u}^2 & \cdots & 0\\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \sigma_{u}^2
+\end{bmatrix}+
+\begin{bmatrix} 
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2\\
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2\\
+\vdots & \vdots & \ddots & \vdots \\
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2
+\end{bmatrix} \\ & =
+\begin{bmatrix} 
+\sigma_{\mu}^2+\sigma_{u}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2\\
+\sigma_{\mu}^2 & \sigma_{\mu}^2+\sigma_{u}^2 & \cdots & \sigma_{\mu}^2\\
+\vdots & \vdots & \ddots & \vdots \\
+\sigma_{\mu}^2 & \sigma_{\mu}^2 & \cdots & \sigma_{\mu}^2+\sigma_{u}^2
+\end{bmatrix}
+\end{align*}
+\end{frame}
+
+\section{Le modèle empilé}
+\frame{\tableofcontents[current]}
+\begin{frame}{Le modèle empilé}
+\begin{align*}
+y=\tilde{X} \delta +\tilde{u}
+\end{align*}
+Avec 
+\begin{align*}
+\delta = (\gamma \beta')'
+\hspace{0.3cm}, \hspace{0.3cm} 
+y= \begin{bmatrix} 
+Y_1 \\
+Y_2 \\
+\vdots \\
+Y_N
+\end{bmatrix}
+\hspace{0.3cm}, \hspace{0.3cm} 
+\tilde{u}= \begin{bmatrix} 
+\tilde{u}_1 \\
+\tilde{u}_2 \\
+\vdots \\
+\tilde{u}_N
+\end{bmatrix}
+\hspace{0.3cm}\textbf{et} \hspace{0.3cm} 
+\tilde{X}= \begin{bmatrix} 
+\tilde{X}_1 \\
+\tilde{X}_2 \\
+\vdots \\
+\tilde{X}_N
+\end{bmatrix}
+\end{align*}
+Où
+\begin{align*}
+\tilde{u}_i=u_i+\wr_T\mu_i \hspace{0.3cm}\textbf{et} \hspace{0.3cm}  \tilde{X}_i=\begin{bmatrix} 
+\wr_T & X_i
+\end{bmatrix}
+\end{align*}
+\end{frame}
+
+\begin{frame}{Le modèle empilé}
+\begin{align*}
+E(\tilde{u}\tilde{u}') & =\begin{bmatrix} 
+E\tilde{u}_1\tilde{u}_1^{'} & \cdots & E\tilde{u}_1\tilde{u}_i^{'} & \cdots &  E\tilde{u}_1\tilde{u}_N^{'} \\
+\vdots & \ddots & \vdots & \ddots & \vdots \\
+E\tilde{u}_i\tilde{u}_1^{'} & \cdots & E\tilde{u}_i\tilde{u}_i^{'} & \cdots &  E\tilde{u}_i\tilde{u}_N^{'} \\
+\vdots & \ddots & \vdots & \ddots & \vdots \\
+E\tilde{u}_N\tilde{u}_1^{'} & \cdots & E\tilde{u}_N\tilde{u}_i^{'} & \cdots &  E\tilde{u}_N\tilde{u}_N^{'} 
+\end{bmatrix}\\ & = \begin{bmatrix} 
+V & \cdots & 0 & \cdots & 0 \\
+\vdots & \ddots & \vdots & \ddots & \vdots \\
+0 & \cdots & V & \cdots & 0 \\
+0 & \cdots & 0 & \cdots & V
+\end{bmatrix}= \Omega 
+\end{align*}
+\end{frame}
+
+\begin{frame}{Le modèle empilé}
+\begin{block}{Produit Kroneker}
+\begin{itemize}
+\item Note : $\otimes$ est le produit Kroneker 
+\item Chaque élément de la matrice $I_N$ sera multiplié par la matrice $V$.
+\item Propriétés importantes:
+\begin{itemize}
+\item si les dimensions rendent la multiplication possible:
+\begin{align*}
+(A \otimes B)(C \otimes D)=(AC \otimes BD)
+\end{align*}
+\item si et seulement si A et B sont inversibles:
+\begin{align*}
+(A \otimes B)^{-1}=A^{-1} \otimes B^{-1}
+\end{align*}
+\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Le modèle empilé}
+\textbf{L'estimé par FGLS s’obtient comme suit:}
+\begin{align*}
+\hat{\beta}_{FGLS}=(X'\hat{\Omega}X)^{-1}X'\hat{\Omega}X
+\end{align*}
+\textbf{Estimé convergent de $\sigma_u^2$}
+\begin{align*}
+\hat{\sigma}_u^2=\frac{\hat{u}'\hat{u}}{NT-N-K}
+\end{align*}
+\textbf{Estimé convergent de $\sigma_{\mu}^2$}
+\begin{itemize}
+\item Considérons le modèle de base, en prenant les moyennes dans le temps de chaque groupe (BETWEEN REGRESSION)
+\begin{align*}
+\overline{Y}_i=\gamma+\beta'\overline{X}_i+\overline{u}_i+\mu_i
+\end{align*}
+Sachant $i=2, \cdots, N.$
+\item Cette régression vise à trouver l’écart entre les groupes dû à $\mu_i$
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Le modèle empilé}
+\textbf{Sous les hypothèses du modèle:}
+\begin{align*}
+\sigma_{BETWEEN}^2=V(\overline{u}_i+\mu_i)=\frac{\sigma_u^2}{T}+\sigma_\mu^2
+\end{align*}
+\begin{itemize}
+\item Si on estime ce modèle par OLS sur toutes les équations (N) on obtient le vecteur de dimensions $(N \times 1)$ des résidus qu’on notera $\hat{v}$ (attention ici, comme vous prenez la moyenne, vous n’avez plus qu’une équation avec N observations)
+\end{itemize}
+\begin{align*}
+\sigma_{BETWEEN}^2=\frac{\hat{v}'\hat{v}}{N-(K+1)}
+\end{align*}
+\begin{align*}
+\sigma_{\mu}^2=\hat{\sigma}_{BETWEEN}^2 -\frac{\hat{\sigma_u}}{T}
+\end{align*}
+\end{frame}
+
+
+\section{Transformation de Fuller-Battese}
+\frame{\tableofcontents[current]}
+\begin{frame}{Transformation de Fuller-Battese}
+\begin{itemize}
+\item Ayant les estimés de $\hat{\sigma}_{\mu}^2$ et $\hat{\sigma}_{u}^2$, on peut maintenant trouver $\hat{V}$ et avoir $\Omega$.
+\item On trouve $\hat{\beta}_{FGLS}=(X'\hat{\Omega}^{-1}X)^{-1}X'\hat{\Omega}^{-1}X$
+\item Par contre, il faut inverser $\hat{\Omega}$ ce qui n’est pas nécessairement facile.
+\item Sachant que $\Omega=I_N \otimes V$, il existe la transformation de Fuler- Battese qui nous aide à inverser cette matrice.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Transformation de Fuller-Battese}
+\textbf{Rappel:}
+\begin{itemize}
+\item  Un GLS consiste à transformer le modèle de sorte à le ramener à un contexte où les OLS sont optimaux. 
+\item $\forall \Omega$ inversible, $\exists$ une matrice $P$ telle que:
+\textbf{Solution pour Omega:}
+\begin{align*}
+P_{\Omega}P_{\Omega}^{'}=\Omega
+\end{align*} 
+\textbf{Solution pour Omega inverse:}
+\begin{align*}
+\Omega^{-1}=[P_{\Omega}P_{\Omega}^{'}]^{-1}=[P_{\Omega}^{'}]^{-1}[P_{\Omega}^{'}]^{-1}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Transformation de Fuller-Battese}
+\textbf{Le modèle transformé en question est donc:}
+\begin{align*}
+P_{\Omega}^{'-1}y=P_{\Omega}^{'-1} \tilde{X} \beta +  P_{\Omega}^{'-1} \tilde{u}
+\end{align*}
+\begin{itemize}
+\item Sachant que $\Omega=I_N \otimes V$, on se concentre sur V.
+\item On peut montrer que la matrice $P_{V}^{-1}$ peut être obtenue comme suit :
+\begin{align*}
+P_{V}^{-1}=\frac{1}{\sigma_u} \left[I - \frac{\theta}{T}\wr_T \wr_T^{'} \right]
+\end{align*}
+\begin{align*}
+\theta = 1- \frac{\hat{\sigma}_u}{\sqrt{\hat{\sigma}_u^2+T \hat{\sigma}_{\mu}^2}}
+\end{align*}
+\item Où $\sigma_u$ est l’écart type.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Transformation de Fuller-Battese}
+\textbf{Remarque:}
+\begin{itemize}
+\item Cette approche est très similaire au modèle en déviation par rapport à la moyenne où nous utilisons la matrice M pour purger des effets des dummies. 
+\item Elle diffère seulement par $\theta$.
+\item Comparer la matrice $\sigma_uP_V^{-1}$ à la matrice précédente :
+\begin{align*}
+M^0=I_T-\frac{1}{T}\wr_T\wr_T^{'}
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Transformation de Fuller-Battese}
+\textbf{Multiplication par $\theta$:}
+\begin{align*}
+P_{\Omega}^{'-1}=v\begin{bmatrix} 
+P_V^{-1} & 0 & \cdots & 0\\
+0 & P_V^{-1} & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & P_V^{-1}
+\end{bmatrix}
+\end{align*}
+\begin{itemize}
+\item L’estimateur FGLS peut être obtenu comme un OLS appliqué à un modèle transformé par $P_{\Omega}^{'-1}$ ou encore $\sigma_u P_{\Omega}^{'-1}.$
+\item  L’élément type de cette dernière transformation (Fuller-Battese (1974)) est:
+\begin{align*}
+Y_{it}-\theta \overline{Y}_i
+\end{align*}
+\item Il faut faire de même pour les X et ensuite estimer le modèle par OLS.
+\end{itemize}
+\end{frame}
+
+\end{document}

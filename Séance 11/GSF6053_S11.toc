@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Estimation des moments de processus stationnaire}{4}{0}{1}
+\beamer@sectionintoc {2}{Tests de bruits blancs}{7}{0}{2}
+\beamer@sectionintoc {3}{Tests de racine unitaire}{14}{0}{3}
+\beamer@sectionintoc {4}{Transformation d'une séries non stationnaire en série stationnaire}{22}{0}{4}
+\beamer@sectionintoc {5}{La conintégration}{25}{0}{5}

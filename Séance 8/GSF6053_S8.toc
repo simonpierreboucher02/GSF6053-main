@@ -1,0 +1,7 @@
+\beamer@sectionintoc {1}{Les modèles panels}{4}{0}{1}
+\beamer@sectionintoc {2}{Les avantages des données panel}{11}{0}{2}
+\beamer@sectionintoc {3}{Notation générale pour ces modèles panels}{13}{0}{3}
+\beamer@sectionintoc {4}{Exemple de données panels}{15}{0}{4}
+\beamer@sectionintoc {5}{Le Modèle pooled}{20}{0}{5}
+\beamer@sectionintoc {6}{Le modèle avec effets fixes}{23}{0}{6}
+\beamer@sectionintoc {7}{Least square dummy variable model}{26}{0}{7}
